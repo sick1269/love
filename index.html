@@ -161,7 +161,7 @@ function updateLove(){
  const day=Math.floor(d/86400);d%=86400;
  const h=Math.floor(d/3600);d%=3600;
  const min=Math.floor(d/60);const s=d%60;
- loveTime.innerHTML=`${y} ปี \n ${m} เดือน ${day} วัน<br>${h} ชม ${min} นาที ${s} วิ`;
+ loveTime.innerHTML=`${y} ปี ${m} เดือน ${day} วัน<br>${h} ชม ${min} นาที ${s} วิ`;
 }
 setInterval(updateLove,1000);updateLove();
 
