@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>โอ๊ค ❤️ อิน</title>
+
+<style>
+:root{
+ --bg1:#ff758c;--bg2:#ff7eb3;--card:#fff;--text:#333;
+}
+body.dark{
+ --bg1:#0f2027;--bg2:#203a43;--card:#1e293b;--text:#f8fafc;
+}
+body{
+ margin:0;font-family:system-ui;
+ background:linear-gradient(135deg,var(--bg1),var(--bg2));
+ min-height:100vh;display:flex;align-items:center;justify-content:center;
+ color:var(--text);overflow:hidden;
+}
+.card{
+ width:90%;max-width:420px;background:var(--card);
+ border-radius:24px;padding:24px;text-align:center;
+ box-shadow:0 20px 40px rgba(0,0,0,.25);z-index:2;
+}
+img{width:100%;border-radius:18px;margin:14px 0;transition:.8s;}
+button{
+ padding:10px 16px;margin:4px;border:none;border-radius:999px;
+ background:#ff758c;color:#fff;font-size:1rem;
+}
+.heart{position:absolute;bottom:-20px;opacity:.25;animation:float linear;}
+@keyframes float{to{transform:translateY(-120vh);}}
+
+/* Overlay */
+.overlay{
+ position:fixed;inset:0;background:rgba(0,0,0,.85);
+ display:none;align-items:center;justify-content:center;
+ color:white;text-align:center;z-index:10;padding:20px;
+}
+.box{
+ background:#111827;border-radius:20px;padding:20px;
+ max-width:420px;width:100%;
+}
+.fire{position:absolute;font-size:26px;animation:boom 2s ease-out;}
+@keyframes boom{
+ from{transform:scale(0);opacity:1;}
+ to{transform:scale(2);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+ <h1>โอ๊ค ❤️ อิน</h1>
+ <img id="photo">
+ <div id="loveTime"></div>
+ <div id="anniv"></div>
+
+ <button onclick="toggleMusic()">▶️ / ⏸️ เพลง</button>
+ <button onclick="toggleTheme()">🌙 / ☀️</button>
+ <button onclick="openMemory()">📦 กล่องความทรงจำ</button>
+</div>
+
+<!-- ครบรอบ -->
+<div id="annivOverlay" class="overlay">
+ <div class="box">
+  <h2>🎉 สุขสันต์วันครบรอบ 🎉</h2>
+  <p>
+   อิน ขอบคุณที่อยู่ข้างโอ๊คเสมอ ❤️<br>
+   วันนี้และวันต่อ ๆ ไป โอ๊คยังอยากมีอินอยู่ข้างกัน
+  </p>
+  <button onclick="closeOverlay('annivOverlay')">ปิด</button>
+ </div>
+</div>
+
+<!-- วันเกิดอิน -->
+<div id="birthdayOverlay" class="overlay">
+ <div class="box">
+  <h2>🎂 Happy Birthday อิน 🎂</h2>
+  <p>
+   ขอให้ปีนี้อินยิ้มเยอะ ๆ ❤️<br>
+   โอ๊คจะอยู่ตรงนี้เสมอ ไม่ว่าทุกข์หรือสุข
+  </p>
+  <button onclick="closeOverlay('birthdayOverlay')">ปิด</button>
+ </div>
+</div>
+
+<!-- กล่องความทรงจำ -->
+<div id="memoryOverlay" class="overlay">
+ <div class="box">
+  <h2>📦 กล่องความทรงจำ</h2>
+  <p>
+   เราเป็นคนคุยกัน<br>
+   วันที่ 6 พฤศจิกา เวลา 19:02<br><br>
+   ผ่านไป 2 วัันเราเริ่มคบกัน<br>
+   วันที่ 8 พฤศจิกา เวลา 11:07<br><br>
+   เราเจอกันครั้งแรก ที่ BTS<br>
+   วันที่ 23 ธันวา เวลา 10:05 (โดยประมาณ ดีใจจนลืมดูเวลา)
+  </p>
+  <button onclick="closeOverlay('memoryOverlay')">ปิด</button>
+ </div>
+</div>
+
+<audio id="music"></audio>
+
+<script>
+const startDate=new Date("2024-11-08T11:08:00");
+
+/* 🔧 ตั้งค่าวันเกิดอินตรงนี้ */
+const birthdayMonth=5; // มิถุนายน (0=ม.ค.)
+const birthdayDay=15;
+let images = [];
+let index = 0;
+const img = document.getElementById("photo");
+const songs=["music/song1.mp3","music/song2.mp3","music/song3.mp3"];
+
+let imgIndex=Math.floor(Math.random()*images.length);
+photo.src=images[imgIndex];
+
+fetch("data/images.json")
+  .then(r => r.json())
+  .then(list => {
+    images = list.sort(() => Math.random() - 0.5); // สุ่มทุกครั้งที่เข้า
+    img.src = images[0];
+
+    // สไลด์ทุก 10 วินาที
+    setInterval(() => {
+      img.style.opacity = 0;
+      setTimeout(() => {
+        index = (index + 1) % images.length;
+        img.src = images[index];
+        img.style.opacity = 1;
+      }, 800);
+    }, 10000);
+  });
+
+// เพลงสุ่มต่อเนื่อง
+function randomSong(){
+ music.src=songs[Math.floor(Math.random()*songs.length)];
+ music.play();
+}
+music.onended=randomSong;
+randomSong();
+
+function toggleMusic(){music.paused?music.play():music.pause();}
+function toggleTheme(){document.body.classList.toggle("dark");}
+
+// เวลา
+function updateLove(){
+ let d=Math.floor((new Date()-startDate)/1000);
+ const y=Math.floor(d/31536000);d%=31536000;
+ const m=Math.floor(d/2592000);d%=2592000;
+ const day=Math.floor(d/86400);d%=86400;
+ const h=Math.floor(d/3600);d%=3600;
+ const min=Math.floor(d/60);const s=d%60;
+ loveTime.innerHTML=`${y} ปี ${m} เดือน ${day} วัน<br>${h} ชม ${min} นาที ${s} วิ`;
+}
+setInterval(updateLove,1000);updateLove();
+
+// ครบรอบ
+function checkAnniv(){
+ const now=new Date();
+ const ann=new Date(now.getFullYear(),10,8);
+ if(ann<now)ann.setFullYear(ann.getFullYear()+1);
+ const days=Math.ceil((ann-now)/(1000*60*60*24));
+ anniv.innerHTML=`🎂 อีก ${days} วันจะครบรอบปี`;
+ if(days===0) showOverlay("annivOverlay");
+}
+checkAnniv();
+
+// วันเกิดอิน
+const now=new Date();
+if(now.getMonth()===birthdayMonth && now.getDate()===birthdayDay){
+ showOverlay("birthdayOverlay");
+ fireworks();
+}
+
+// เอฟเฟกต์หัวใจ
+setInterval(()=>{
+ const h=document.createElement("div");
+ h.className="heart";h.innerText="💗";
+ h.style.left=Math.random()*100+"vw";
+ h.style.animationDuration=6+Math.random()*4+"s";
+ document.body.appendChild(h);
+ setTimeout(()=>h.remove(),10000);
+},700);
+
+// เอฟเฟกต์พิเศษ
+function fireworks(){
+ setInterval(()=>{
+  const f=document.createElement("div");
+  f.className="fire";f.innerText="🎆";
+  f.style.left=Math.random()*100+"vw";
+  f.style.top=Math.random()*100+"vh";
+  document.body.appendChild(f);
+  setTimeout(()=>f.remove(),2000);
+ },300);
+}
+
+function showOverlay(id){document.getElementById(id).style.display="flex";}
+function closeOverlay(id){document.getElementById(id).style.display="none";}
+function openMemory(){showOverlay("memoryOverlay");}
+</script>
+
+</body>
+</html>
