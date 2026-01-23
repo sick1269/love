@@ -12,6 +12,14 @@
 body.dark{
  --bg1:#0f2027;--bg2:#203a43;--card:#1e293b;--text:#f8fafc;
 }
+.photo {
+  width: 100%;
+  max-width: 360px;
+  height: 480px;        /* กำหนดความสูงชัดเจน */
+  object-fit: cover;   /* ครอปให้พอดี */
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.3);
+}
 body{
  margin:0;font-family:system-ui;
  background:linear-gradient(135deg,var(--bg1),var(--bg2));
