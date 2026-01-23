@@ -161,7 +161,7 @@ function updateLove(){
  const day=Math.floor(d/86400);d%=86400;
  const h=Math.floor(d/3600);d%=3600;
  const min=Math.floor(d/60);const s=d%60;
- loveTime.innerHTML=`${y} ปี ${m} เดือน ${day} วัน<br>${h} ชม ${min} นาที ${s} วิ`;
+ loveTime.innerHTML=`${y} ปี \n${m} เดือน ${day} วัน<br>${h} ชม ${min} นาที ${s} วิ`;
 }
 setInterval(updateLove,1000);updateLove();
 
@@ -171,7 +171,7 @@ function checkAnniv(){
  const ann=new Date(now.getFullYear(),10,8);
  if(ann<now)ann.setFullYear(ann.getFullYear()+1);
  const days=Math.ceil((ann-now)/(1000*60*60*24));
- anniv.innerHTML=`🎂 อีก ${days} วันจะครบรอบปี`;
+ anniv.innerHTML=\n`🎂 อีก ${days} วันจะครบรอบปี`;
  if(days===0) showOverlay("annivOverlay");
 }
 checkAnniv();
