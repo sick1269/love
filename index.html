@@ -27,6 +27,26 @@ body{
  color:#e5e7eb;
  overflow:auto;
 }
+.info{
+ margin-top:10px;
+ line-height:1.6;
+ font-size:.95rem;
+}
+
+.info p{
+ margin:6px 0;
+}
+
+.info button{
+ margin-top:12px;
+ padding:10px 18px;
+ border:none;
+ border-radius:999px;
+ background:linear-gradient(135deg,#ec4899,#a855f7);
+ color:white;
+ font-size:1rem;
+ box-shadow:0 8px 20px rgba(0,0,0,.4);
+}
 .layout{
  display:grid;
  grid-template-columns:1fr auto 1fr;
@@ -104,11 +124,14 @@ button{
   <img class="anime a1">
   <img class="anime a2">
 
-  <div class="center-text">
-    <h1>โอ๊ค ❤️ พระอินทร์</h1>
-    <div id="loveTime"></div>
-    <div id="anniv"></div>
-  </div>
+  <div class="info">
+  <p id="loveTime"></p>
+  <p id="annivMonth"></p>
+  <p id="annivYear"></p>
+
+  <button onclick="openMemory()">❤ กล่องความทรงจำ 💜</button>
+</div>
+
 
   <img class="anime a3">
   <img class="anime a4">
@@ -196,16 +219,75 @@ function toggleMusic(){music.paused?music.play():music.pause();}
 function toggleTheme(){document.body.classList.toggle("dark");}
 
 // เวลา
+const startDate = new Date("2024-11-08T11:07:00");
+
+function pad(n){ return n.toString().padStart(2,"0"); }
+
 function updateLove(){
- let d=Math.floor((new Date()-startDate)/1000);
- const y=Math.floor(d/31536000);d%=31536000;
- const m=Math.floor(d/2592000);d%=2592000;
- const day=Math.floor(d/86400);d%=86400;
- const h=Math.floor(d/3600);d%=3600;
- const min=Math.floor(d/60);const s=d%60;
- loveTime.innerHTML=`${y} ปี ${m} เดือน ${day} วัน<br>${h} ชม ${min} นาที ${s} วิ`;
+  let diff = Math.floor((Date.now() - startDate) / 1000);
+
+  const y = Math.floor(diff / 31536000); diff %= 31536000;
+  const mo = Math.floor(diff / 2592000); diff %= 2592000;
+  const d = Math.floor(diff / 86400); diff %= 86400;
+  const h = Math.floor(diff / 3600); diff %= 3600;
+  const m = Math.floor(diff / 60);
+  const s = diff % 60;
+
+  loveTime.innerHTML =
+   `เราคบกันมา ${y} ปี ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที`;
 }
-setInterval(updateLove,1000);updateLove();
+
+// ครบรอบ “เดือน”
+function nextMonthAnniv(){
+  const now = new Date();
+  let target = new Date(now);
+  target.setMonth(target.getMonth() + 1);
+  target.setDate(startDate.getDate());
+  target.setHours(startDate.getHours(), startDate.getMinutes(), 0);
+
+  if(target < now) target.setMonth(target.getMonth() + 1);
+
+  let diff = Math.floor((target - now) / 1000);
+  const mo = Math.floor(diff / 2592000); diff %= 2592000;
+  const d = Math.floor(diff / 86400); diff %= 86400;
+  const h = Math.floor(diff / 3600); diff %= 3600;
+  const m = Math.floor(diff / 60);
+  const s = diff % 60;
+
+  annivMonth.innerHTML =
+   `อีก ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที ถึงวันครบ`;
+}
+
+// ครบรอบ “ปี”
+function nextYearAnniv(){
+  const now = new Date();
+  let target = new Date(
+    now.getFullYear(),
+    startDate.getMonth(),
+    startDate.getDate(),
+    startDate.getHours(),
+    startDate.getMinutes()
+  );
+  if(target < now) target.setFullYear(target.getFullYear() + 1);
+
+  let diff = Math.floor((target - now) / 1000);
+  const y = Math.floor(diff / 31536000); diff %= 31536000;
+  const mo = Math.floor(diff / 2592000); diff %= 2592000;
+  const d = Math.floor(diff / 86400); diff %= 86400;
+  const h = Math.floor(diff / 3600); diff %= 3600;
+  const m = Math.floor(diff / 60);
+  const s = diff % 60;
+
+  annivYear.innerHTML =
+   `อีก ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที ถึงวันครบอีก 1 ปี`;
+}
+
+setInterval(()=>{
+  updateLove();
+  nextMonthAnniv();
+  nextYearAnniv();
+},1000);
+
 
 // ครบรอบ
 function checkAnniv(){
