@@ -29,24 +29,24 @@ body{
 
 /* พื้นหลังเบลอ */
 body::before{
- content:"";
- position:fixed;
- inset:0;
- background:url("./images/bg-daisy-purple.jpg") center/cover no-repeat;
- filter:blur(18px) brightness(.6);
- transform:scale(1.1);
- z-index:-2;
+  content:"";
+  position:fixed;
+  inset:0;
+  background:url("./images/bg-daisy-purple.jpg") center/cover no-repeat;
+  filter: blur(18px) brightness(.85) saturate(1.2);
+  transform:scale(1.12);
+  z-index:-2;
 }
 
 /* ไล่แสงกลางคืนทับ */
 body::after{
- content:"";
- position:fixed;
- inset:0;
- background:
-  radial-gradient(circle at top, rgba(168,85,247,.35), transparent 60%),
-  radial-gradient(circle at bottom, rgba(236,72,153,.25), transparent 60%);
- z-index:-1;
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at top, rgba(168,85,247,.15), transparent 65%),
+    radial-gradient(circle at bottom, rgba(236,72,153,.12), transparent 65%);
+  z-index:-1;
 }
 
 .info{
