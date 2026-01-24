@@ -25,17 +25,18 @@ body{
  color:#e5e7eb;
  overflow:auto;
  position:relative;
+ z-index: 0;
 }
 
 /* พื้นหลังเบลอ */
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:url("./images/bg-daisy-purple.jpg") center/cover no-repeat;
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("./images/bg-daisy-purple.jpg") center/cover no-repeat;
   filter: blur(18px) brightness(.85) saturate(1.2);
-  transform:scale(1.12);
-  z-index:auto;
+  transform: scale(1.12);
+  z-index: -1;
 }
 
 /* ไล่แสงกลางคืนทับ */
