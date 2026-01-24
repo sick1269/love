@@ -291,25 +291,36 @@ function nextMonthAnniv(){
 // ครบรอบ “ปี”
 function nextYearAnniv(){
   const now = new Date();
+
+  // วันครบรอบปีถัดไป
   let target = new Date(
     now.getFullYear(),
     startDate.getMonth(),
     startDate.getDate(),
     startDate.getHours(),
-    startDate.getMinutes()
+    startDate.getMinutes(),
+    startDate.getSeconds()
   );
-  if(target < now) target.setFullYear(target.getFullYear() + 1);
 
+  if (target <= now) {
+    target.setFullYear(target.getFullYear() + 1);
+  }
+
+  // เวลาที่เหลือ
   let diff = Math.floor((target - now) / 1000);
-  const y = Math.floor(diff / 31536000); diff %= 31536000;
+
   const mo = Math.floor(diff / 2592000); diff %= 2592000;
-  const d = Math.floor(diff / 86400); diff %= 86400;
-  const h = Math.floor(diff / 3600); diff %= 3600;
-  const m = Math.floor(diff / 60);
-  const s = diff % 60;
+  const d  = Math.floor(diff / 86400);   diff %= 86400;
+  const h  = Math.floor(diff / 3600);    diff %= 3600;
+  const m  = Math.floor(diff / 60);
+  const s  = diff % 60;
+
+  // ⭐ จำนวนปีที่จะครบจริง
+  const yearsWillBe = target.getFullYear() - startDate.getFullYear();
 
   annivYear.innerHTML =
-   `อีก ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที<br> จะเป็น ${Number(y) + 1} ปี`;
+    `อีก ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที<br>
+     จะเป็น ${yearsWillBe} ปี`;
 }
 
 setInterval(()=>{
