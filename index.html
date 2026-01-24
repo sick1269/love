@@ -18,21 +18,37 @@ body.dark{
   height: 480px;
   object-fit: cover;
 }
-body {
-  margin: 0;
-  min-height: 100vh;
-
-  background-image: url("images/bg-daisy-purple.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-
-  font-family: 'Segoe UI', sans-serif;
-  color: white;
-
-  overflow-y: auto;
+body{
+ margin:0;
+ font-family:system-ui;
+ min-height:100vh;
+ color:#e5e7eb;
+ overflow:auto;
+ position:relative;
 }
+
+/* พื้นหลังเบลอ */
+body::before{
+ content:"";
+ position:fixed;
+ inset:0;
+ background:url("images/bg-daisy-purple.jpg") center/cover no-repeat;
+ filter:blur(18px) brightness(.6);
+ transform:scale(1.1);
+ z-index:-2;
+}
+
+/* ไล่แสงกลางคืนทับ */
+body::after{
+ content:"";
+ position:fixed;
+ inset:0;
+ background:
+  radial-gradient(circle at top, rgba(168,85,247,.35), transparent 60%),
+  radial-gradient(circle at bottom, rgba(236,72,153,.25), transparent 60%);
+ z-index:-1;
+}
+
 .info{
  margin-top:10px;
  line-height:1.6;
