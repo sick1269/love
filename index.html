@@ -80,11 +80,14 @@ body::after{
  padding:40px 20px;
 }
 .center-text{
- grid-column:2;
- grid-row:1 / span 2;
- text-align:center;
- max-width:260px;
+  background: rgba(0,0,0,.45);   /* กล่องดำจาง */
+  backdrop-filter: blur(6px);    /* เบลอพื้นหลังด้านหลัง */
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 20px;
+  padding: 22px 20px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.35);
 }
+
 .anime{
  width:120px;
  height:160px;
