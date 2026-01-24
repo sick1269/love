@@ -309,7 +309,7 @@ function nextYearAnniv(){
   const s = diff % 60;
 
   annivYear.innerHTML =
-   `อีก ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที<br> จะเป็น ${y + 1} ปี`;
+   `อีก ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที<br> จะเป็น ${Number(y) + 1} ปี`;
 }
 
 setInterval(()=>{
