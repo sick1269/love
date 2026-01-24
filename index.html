@@ -19,11 +19,51 @@ body.dark{
   object-fit: cover;
 }
 body{
- margin:0;font-family:system-ui;
- background:linear-gradient(135deg,var(--bg1),var(--bg2));
- min-height:100vh;display:flex;align-items:center;justify-content:center;
- color:var(--text);overflow:auto;
+ margin:0;
+ font-family:system-ui;
+ background:
+   radial-gradient(circle at top, #1e293b, #020617);
+ min-height:100vh;
+ color:#e5e7eb;
+ overflow:auto;
 }
+.layout{
+ display:grid;
+ grid-template-columns:1fr auto 1fr;
+ grid-template-rows:auto auto;
+ gap:20px;
+ align-items:center;
+ justify-items:center;
+ padding:40px 20px;
+}
+.center-text{
+ grid-column:2;
+ grid-row:1 / span 2;
+ text-align:center;
+ max-width:260px;
+}
+.anime{
+ width:120px;
+ height:160px;
+ object-fit:cover;
+ border-radius:14px;
+ box-shadow:0 10px 25px rgba(0,0,0,.5);
+ opacity:.95;
+ transition: opacity .5s ease;
+}
+
+/* มือถือ */
+@media(max-width:600px){
+ .layout{
+   grid-template-columns:1fr 1fr;
+   grid-template-rows:auto auto auto;
+ }
+ .center-text{
+   grid-column:1 / span 2;
+   grid-row:2;
+ }
+}
+ 
 .card{
  width:90%;max-width:420px;background:var(--card);
  border-radius:24px;padding:24px;text-align:center;
@@ -60,15 +100,18 @@ button{
 
 <body>
 
-<div class="card">
- <h1>โอ๊ค ❤️ พระอินทร์</h1>
- <img id="photo" class="photo">
- <div id="loveTime"></div>
- <div id="anniv"></div>
+<div class="layout">
+  <img class="anime a1">
+  <img class="anime a2">
 
- <button onclick="toggleMusic()">▶️ / ⏸️ เพลง</button>
- <button onclick="toggleTheme()">🌙 / ☀️</button>
- <button onclick="openMemory()">📦 กล่องความทรงจำ</button>
+  <div class="center-text">
+    <h1>โอ๊ค ❤️ พระอินทร์</h1>
+    <div id="loveTime"></div>
+    <div id="anniv"></div>
+  </div>
+
+  <img class="anime a3">
+  <img class="anime a4">
 </div>
 
 <!-- ครบรอบ -->
@@ -114,35 +157,32 @@ button{
 <audio id="music"></audio>
 
 <script>
-const startDate=new Date("2024-11-08T11:08:00");
-
-/* 🔧 ตั้งค่าวันเกิดอินตรงนี้ */
-const birthdayMonth=5; // มิถุนายน (0=ม.ค.)
-const birthdayDay=15;
 let images = [];
-let index = 0;
-const img = document.getElementById("photo");
-const songs=["music/song1.mp3","music/song2.mp3","music/song3.mp3"];
+const animeImgs = document.querySelectorAll(".anime");
 
-let imgIndex=Math.floor(Math.random()*images.length);
-photo.src=images[imgIndex];
+function shuffle(arr){
+  return arr.sort(() => Math.random() - 0.5);
+}
+
+function updateAnimeImages(){
+  const shuffled = shuffle([...images]);
+  animeImgs.forEach((img, i) => {
+    img.style.opacity = 0;
+    setTimeout(() => {
+      img.src = shuffled[i % shuffled.length];
+      img.style.opacity = 1;
+    }, 500);
+  });
+}
 
 fetch("data/images.json")
   .then(r => r.json())
   .then(list => {
-    images = list.sort(() => Math.random() - 0.5); // สุ่มทุกครั้งที่เข้า
-    img.src = images[0];
-
-    // สไลด์ทุก 10 วินาที
-    setInterval(() => {
-      img.style.opacity = 0;
-      setTimeout(() => {
-        index = (index + 1) % images.length;
-        img.src = images[index];
-        img.style.opacity = 1;
-      }, 800);
-    }, 10000);
+    images = list;
+    updateAnimeImages();              // แสดงครั้งแรก
+    setInterval(updateAnimeImages, 10000); // 🔁 ทุก 10 วินาที
   });
+
 
 // เพลงสุ่มต่อเนื่อง
 function randomSong(){
