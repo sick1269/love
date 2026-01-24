@@ -262,7 +262,6 @@ function updateLove(){
   const h = Math.floor(diff / 3600); diff %= 3600;
   const m = Math.floor(diff / 60);
   const s = diff % 60;
-  const nextYear = Number(y) + 1;
 
   loveTime.innerHTML =
    `เราคบกันมา<br> ${y} ปี ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที`;
@@ -308,10 +307,9 @@ function nextYearAnniv(){
   const h = Math.floor(diff / 3600); diff %= 3600;
   const m = Math.floor(diff / 60);
   const s = diff % 60;
-  const nextYear = Number(y) + 1;
 
   annivYear.innerHTML =
-   `อีก ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที<br> จะเป็น ${nextYear} ปี`;
+   `อีก ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที<br> จะเป็น ${Number(y) + 1} ปี`;
 }
 
 setInterval(()=>{
