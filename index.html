@@ -187,14 +187,13 @@ h1{ margin:4px 0 8px; font-size:1.2rem; letter-spacing:0.2px }
 <img id="img3" class="corner-img c3" alt="">
 <img id="img4" class="corner-img c4" alt="">
 
-<div class="wrap">
-  <div class="card" role="main">
+<div class="layout">
+  <div class="center-text">
     <h1>โอ๊ค ❤️ พระอินทร์</h1>
 
-    <!-- elapsed -->
-    <div class="time-block" id="elapsedBlock">
+    <!-- MAIN time block (leaving words as requested, but numbers are separate spans) -->
+    <div class="time-line">
       <div class="time-row">เราคบกันมา</div>
-        <div class="time-row"></div>
       <div class="time-row">
         <span class="num" id="y">0</span> ปี
         <span style="display:inline-block;width:8px;"></span>
@@ -202,6 +201,8 @@ h1{ margin:4px 0 8px; font-size:1.2rem; letter-spacing:0.2px }
         <span style="display:inline-block;width:8px;"></span>
         <span class="num" id="d">00</span> วัน
       </div>
+
+      <div class="time-row">
         <span class="num" id="h">00</span> ชม.
         <span style="display:inline-block;width:8px;"></span>
         <span class="num" id="m">00</span> นาที
@@ -210,10 +211,11 @@ h1{ margin:4px 0 8px; font-size:1.2rem; letter-spacing:0.2px }
       </div>
     </div>
 
-    <div class="hr" aria-hidden="true"></div>
+    <!-- divider -->
+    <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:14px 0;">
 
-    <!-- monthly countdown -->
-    <div class="time-block" id="annivMonth">
+    <!-- ANNIVERSARY (month) -->
+    <div id="annivMonth" class="time-line" style="margin-top:6px;">
       <div class="time-row"></div>
       <div class="time-row">อีก
         <span class="num" id="am_d">00</span> วัน
@@ -227,10 +229,10 @@ h1{ margin:4px 0 8px; font-size:1.2rem; letter-spacing:0.2px }
       <div class="time-row">ถึงวันครบรอบ</div>
     </div>
 
-    <div class="hr" aria-hidden="true"></div>
+    <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:14px 0;">
 
-    <!-- yearly countdown -->
-    <div class="time-block" id="annivYear">
+    <!-- ANNIVERSARY (year) -->
+    <div id="annivYear" class="time-line">
       <div class="time-row"></div>
       <div class="time-row">อีก
         <span class="num" id="ay_mo">00</span> เดือน
@@ -246,8 +248,8 @@ h1{ margin:4px 0 8px; font-size:1.2rem; letter-spacing:0.2px }
       <div class="time-row">จะเป็น <span class="num" id="ay_y">0</span> ปี</div>
     </div>
 
-    <div class="controls">
-      <button class="btn" onclick="openMemory()">❤ กล่องความทรงจำ 💜</button>
+    <div style="margin-top:14px;">
+      <button onclick="openMemory()">❤ กล่องความทรงจำ 💜</button>
     </div>
   </div>
 </div>
