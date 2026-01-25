@@ -109,6 +109,8 @@ body::after{
  box-shadow:0 10px 25px rgba(0,0,0,.5);
  opacity:.95;
  transition: opacity .5s ease;
+ position: absolute;
+ z-index: 2;   /* รูปทั้งหมดต่ำกว่ากล่อง */
 }
 
 .a1{ top: 10%; left: 8%; }
@@ -126,6 +128,8 @@ body::after{
  .center-text{
    grid-column:1 / span 2;
    grid-row:2;
+   position: relative;
+   z-index: 3;   /* กล่องอยู่บนสุด */
  }
 }
  
