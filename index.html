@@ -1,97 +1,152 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover" />
 <title>เว็บสำหรับเรา</title>
 <style>
-:root{ --text:#e5e7eb; }
-body{ margin:0; font-family:system-ui; min-height:100vh; color:var(--text); overflow:auto; position:relative; z-index:0; }
+:root{
+  --fg:#f8fafc;
+  --glass: rgba(0,0,0,0.48);
+  --accent1:#ec4899;
+  --accent2:#a855f7;
+}
 
-/* blurred background */
+/* Reset + base */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans Thai","Helvetica Neue",Arial;
+  background: #0b1220;
+  color:var(--fg);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+  position:relative;
+  z-index:0;
+}
+
+/* blurred background image (fixed) */
 body::before{
   content:"";
   position:fixed; inset:0;
   background: url("./images/bg-daisy-purple.jpg") center/cover no-repeat;
-  filter: blur(18px) brightness(.85) saturate(1.2);
-  transform: scale(1.12);
+  filter: blur(18px) brightness(.80) saturate(1.15);
+  transform: scale(1.08);
   z-index:-2;
 }
 body::after{
   content:"";
   position:fixed; inset:0;
   background:
-    radial-gradient(circle at top, rgba(168,85,247,.12), transparent 65%),
-    radial-gradient(circle at bottom, rgba(236,72,153,.10), transparent 65%);
+    radial-gradient(circle at top, rgba(168,85,247,.12), transparent 55%),
+    radial-gradient(circle at bottom, rgba(236,72,153,.08), transparent 55%);
   z-index:-1;
 }
 
-/* layout + center box */
-.layout{ min-height:100vh; display:flex; align-items:center; justify-content:center; position:relative; padding: 40px 16px; }
-.center-text{
-  position:relative; text-align:center; max-width:360px;
-  background: rgba(0,0,0,.45);
-  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-  border-radius:20px; padding:22px; box-shadow:0 12px 30px rgba(0,0,0,.35);
-  z-index:3;
+/* corner images (kept but hidden on small screens) */
+.corner-img{
+  position:fixed;
+  width:96px;
+  height:128px;
+  object-fit:cover;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,.45);
+  transition:opacity .4s ease, transform .4s ease;
+  z-index:1;
+}
+.c1{ top:8%; left:6%; transform: translateZ(0); }
+.c2{ top:8%; right:6%; transform: translateZ(0); }
+.c3{ bottom:8%; left:6%; transform: translateZ(0); }
+.c4{ bottom:8%; right:6%; transform: translateZ(0); }
+
+/* center layout for mobile-first */
+.wrap{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+  position:relative;
+  z-index:2;
 }
 
-/* anime pics around */
-.anime{ position:absolute; width:120px; height:160px; object-fit:cover; border-radius:14px; box-shadow:0 10px 25px rgba(0,0,0,.5); opacity:.95; transition:opacity .5s ease; z-index:2; }
-.a1{ top:8%; left:6%; }
-.a2{ top:8%; right:6%; }
-.a3{ bottom:8%; left:6%; }
-.a4{ bottom:8%; right:6%; }
+.card{
+  width:100%;
+  max-width:760px;
+  background:var(--glass);
+  border-radius:18px;
+  padding:18px;
+  text-align:center;
+  box-shadow:0 12px 36px rgba(0,0,0,.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
 
-/* time number styling + animation classes */
-.time-line{ margin:6px 0; line-height:1.5; font-size:0.95rem; color:#f8fafc; }
+/* header */
+h1{ margin:4px 0 8px; font-size:1.2rem; letter-spacing:0.2px }
+
+/* time blocks */
+.time-block{ margin:8px 0; color:var(--fg); font-size:1rem; line-height:1.35; }
 .time-row{ margin:6px 0; }
 
-/* reusable number slot */
+/* number slot */
 .num{
   display:inline-block;
   min-width:2ch;
   text-align:center;
+  font-weight:700;
+  font-size:1.02rem;
   transition: transform .28s ease, opacity .28s ease;
   will-change: transform, opacity;
-  font-weight:600;
 }
 
-/* movement classes */
+/* move classes */
 .num.up{ transform: translateY(-10px); opacity:0; }
 .num.down{ transform: translateY(10px); opacity:0; }
 
-/* button */
-button{
-  padding:10px 16px;margin:8px 6px;border:none;border-radius:999px;
-  background:linear-gradient(135deg,#ec4899,#a855f7); color:white; font-size:1rem; box-shadow:0 8px 20px rgba(0,0,0,.35);
+/* dividers & small UI */
+.hr { height:1px; background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); margin:12px 0; border-radius:2px; }
+.controls{ margin-top:12px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+.btn{
+  padding:10px 14px;
+  border-radius:999px;
+  border:0;
+  color:white;
+  background: linear-gradient(135deg,var(--accent1),var(--accent2));
+  box-shadow:0 8px 20px rgba(0,0,0,.35);
+  font-size:0.95rem;
 }
 
-/* overlay and box */
-.overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.7); z-index:10; padding:20px; }
-.box{ background:#0f1724; border-radius:12px; padding:18px; color:#fff; max-width:420px; width:100%; }
+/* overlays (full-screen modal) */
+.overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.6); z-index:12; padding:18px; }
+.modal{ background:#071022; padding:16px; border-radius:12px; color:#fff; max-width:420px; width:100%; box-shadow:0 10px 30px rgba(0,0,0,.6); }
 
-/* responsive */
+/* responsive: hide corners and enlarge font on small screens */
 @media (max-width:600px){
-  .anime{ display:none; } /* hide corner images on small screens for clarity */
-  .center-text{ width:92%; padding:18px; }
+  .corner-img{ display:none; }
+  .card{ padding:16px; border-radius:14px; }
+  h1{ font-size:1.15rem; }
+  .num{ font-size:1.15rem; min-width:2.4ch; }
+  .btn{ padding:12px 16px; font-size:1rem; }
 }
 </style>
 </head>
 <body>
 
-<!-- corner images -->
-<img class="anime a1" id="a1">
-<img class="anime a2" id="a2">
-<img class="anime a3" id="a3">
-<img class="anime a4" id="a4">
+<!-- corner images (still present but hidden on small screens) -->
+<img id="img1" class="corner-img c1" alt="">
+<img id="img2" class="corner-img c2" alt="">
+<img id="img3" class="corner-img c3" alt="">
+<img id="img4" class="corner-img c4" alt="">
 
-<div class="layout">
-  <div class="center-text">
+<div class="wrap">
+  <div class="card" role="main">
     <h1>โอ๊ค ❤️ พระอินทร์</h1>
 
-    <!-- MAIN time block (leaving words as requested, but numbers are separate spans) -->
-    <div class="time-line">
+    <!-- elapsed -->
+    <div class="time-block" id="elapsedBlock">
       <div class="time-row">เราคบกันมา</div>
       <div class="time-row">
         <span class="num" id="y">0</span> ปี
@@ -100,7 +155,6 @@ button{
         <span style="display:inline-block;width:8px;"></span>
         <span class="num" id="d">00</span> วัน
       </div>
-
       <div class="time-row">
         <span class="num" id="h">00</span> ชม.
         <span style="display:inline-block;width:8px;"></span>
@@ -110,11 +164,10 @@ button{
       </div>
     </div>
 
-    <!-- divider -->
-    <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:14px 0;">
+    <div class="hr" aria-hidden="true"></div>
 
-    <!-- ANNIVERSARY (month) -->
-    <div id="annivMonth" class="time-line" style="margin-top:6px;">
+    <!-- monthly countdown -->
+    <div class="time-block" id="annivMonth">
       <div class="time-row">-</div>
       <div class="time-row">อีก
         <span class="num" id="am_d">00</span> วัน
@@ -128,10 +181,10 @@ button{
       <div class="time-row">ถึงวันครบรอบ</div>
     </div>
 
-    <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:14px 0;">
+    <div class="hr" aria-hidden="true"></div>
 
-    <!-- ANNIVERSARY (year) -->
-    <div id="annivYear" class="time-line">
+    <!-- yearly countdown -->
+    <div class="time-block" id="annivYear">
       <div class="time-row">-</div>
       <div class="time-row">อีก
         <span class="num" id="ay_mo">00</span> เดือน
@@ -147,29 +200,64 @@ button{
       <div class="time-row">จะเป็น <span class="num" id="ay_y">0</span> ปี</div>
     </div>
 
-    <div style="margin-top:14px;">
-      <button onclick="toggleTheme()">🌙 / ☀️</button>
-      <button onclick="openMemory()">❤ กล่องความทรงจำ 💜</button>
+    <div class="controls">
+      <button class="btn" onclick="openMemory()">❤ กล่องความทรงจำ 💜</button>
     </div>
   </div>
 </div>
 
 <!-- overlays -->
-<div id="memoryOverlay" class="overlay"><div class="box"><h3>📦 กล่องความทรงจำ</h3><p>ตัวอย่างความทรงจำไว้ที่นี่...</p><button onclick="closeOverlay('memoryOverlay')">ปิด</button></div></div>
-<div id="annivOverlay" class="overlay"><div class="box"><h3>🎉 ครบรอบ</h3><p>สุขสันต์ครบรอบนะ!</p><button onclick="closeOverlay('annivOverlay')">ปิด</button></div></div>
-<div id="birthdayOverlay" class="overlay"><div class="box"><h3>🎂 Happy Birthday</h3><p>สุขสันต์วันเกิด!</p><button onclick="closeOverlay('birthdayOverlay')">ปิด</button></div></div>
+<div id="memoryOverlay" class="overlay"><div class="modal"><h3>📦 กล่องความทรงจำ</h3><p>เราเป็นคนคุยกัน<br> วันที่ 6 พฤศจิกา เวลา 19:02<br><br> ผ่านไป 2 วัันเราเริ่มคบกัน<br> วันที่ 8 พฤศจิกา เวลา 11:07<br><br> เราเจอกันครั้งแรก ที่ BTS<br> วันที่ 23 ธันวา เวลา 10:05 (โดยประมาณ ดีใจจนลืมดูเวลา)</p><p style="text-align:right;"><button class="btn" onclick="closeOverlay('memoryOverlay')">ปิด</button></p></div></div>
+<div id="annivOverlay" class="overlay"><div class="modal"><h3>🎉 วันครบรอบแล้ววว สุขสันต์วันครบรอบนะคะ 🎉</h3><p>ขอบคุณที่อยู่ด้วยกันมาขนาดนี้แล้วยัังไม่เบื่อกันนะคะ ❤️<br> ขอให้มีความสุขแบบนี้ด้วยกันไปตลอดนะคะ รักเธอนะ 😊!</p><p style="text-align:right;"><button class="btn" onclick="closeOverlay('annivOverlay')">ปิด</button></p></div></div>
 
 <audio id="music"></audio>
 
 <script>
-/* ---------------------------
-  Config / initial setup
-   --------------------------- */
-const startDate = new Date("2024-11-08T11:07:00"); // ถ้าจะเปลี่ยน ให้แก้ตรงนี้
-const songs = []; // เพิ่มเพลงถ้ามี
-const birthdayMonth = 3; // ถ้าจะเปิดระบบวันเกิด ใส่เดือน 0..11
-const birthdayDay = 11;
+/* ====== CONFIG - แก้ตรงนี้ถ้าต้องการ ====== */
+const startDate = new Date("2024-11-08T11:07:00"); // ระบุวันเริ่มคบ
+const imagesJSON = "data/images.json"; // ที่อยู่ images.json (สุ่มรูปมุม)
+const songs = []; // ใส่เพลงถ้ามี
+const birthdayMonth = -1;
+const birthdayDay = -1;
 
+/* ====== helper ====== */
+function pad(n){ return String(n).padStart(2,"0"); }
+
+function diffYMDHMS(from, to){
+  let y = to.getFullYear() - from.getFullYear();
+  let m = to.getMonth() - from.getMonth();
+  let d = to.getDate() - from.getDate();
+  let h = to.getHours() - from.getHours();
+  let min = to.getMinutes() - from.getMinutes();
+  let s = to.getSeconds() - from.getSeconds();
+
+  if(s < 0){ s += 60; min--; }
+  if(min < 0){ min += 60; h--; }
+  if(h < 0){ h += 24; d--; }
+  if(d < 0){
+    const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
+    d += prevMonth.getDate();
+    m--;
+  }
+  if(m < 0){ m += 12; y--; }
+
+  return { y, m, d, h, min, s };
+}
+
+/* small animated set (up/down) */
+function setNum(el, newVal){
+  if(!el) return;
+  const old = el.textContent;
+  if(String(old) === String(newVal)) return;
+  const dir = Number(newVal) > Number(old) ? "up" : "down";
+  el.classList.add(dir);
+  setTimeout(()=> {
+    el.textContent = String(newVal);
+    el.classList.remove(dir);
+  }, 160);
+}
+
+/* ====== elements ====== */
 const yEl = document.getElementById("y");
 const moEl = document.getElementById("mo");
 const dEl = document.getElementById("d");
@@ -189,222 +277,114 @@ const ay_m  = document.getElementById("ay_m");
 const ay_s  = document.getElementById("ay_s");
 const ay_y  = document.getElementById("ay_y");
 
-const animeImgs = {
-  a1: document.getElementById("a1"),
-  a2: document.getElementById("a2"),
-  a3: document.getElementById("a3"),
-  a4: document.getElementById("a4"),
-};
-let images = [];
+const corner1 = document.getElementById("img1");
+const corner2 = document.getElementById("img2");
+const corner3 = document.getElementById("img3");
+const corner4 = document.getElementById("img4");
 
-/* helper */
-function pad(n){ return String(n).padStart(2,"0"); }
+/* ====== fetch corner images (non-blocking) ====== */
+fetch(imagesJSON).then(r=>r.json()).then(list=>{
+  if(!Array.isArray(list) || list.length===0) return;
+  // shuffle and assign
+  function shuffle(a){ return a.sort(()=>Math.random()-0.5); }
+  const s = shuffle([...list]);
+  corner1.src = s[0 % s.length];
+  corner2.src = s[1 % s.length];
+  corner3.src = s[2 % s.length];
+  corner4.src = s[3 % s.length];
+  // fade in
+  [corner1,corner2,corner3,corner4].forEach(img=> img.style.opacity = 0);
+  setTimeout(()=> [corner1,corner2,corner3,corner4].forEach(i=> i.style.opacity = 1), 80);
 
-function setNum(el, newVal){
-  // animate up/down on change
-  const old = el.textContent;
-  if(String(old) === String(newVal)) return;
-  const upOrDown = Number(newVal) > Number(old) ? "up" : "down";
-  el.classList.add(upOrDown);
-  setTimeout(()=> {
-    el.textContent = String(newVal);
-    el.classList.remove(upOrDown);
-  }, 160);
-}
-
-/* ---------------------------
-  background corner images: load from images.json
-   --------------------------- */
-function shuffle(arr){ return arr.sort(()=>Math.random()-0.5); }
-
-fetch("data/images.json").then(r=>r.json()).then(list=>{
-  images = list;
-  const shuffled = shuffle([...images]);
-  // fill four corners (wrap if less than 4)
-  animeImgs.a1.src = shuffled[0 % shuffled.length] || "";
-  animeImgs.a2.src = shuffled[1 % shuffled.length] || "";
-  animeImgs.a3.src = shuffled[2 % shuffled.length] || "";
-  animeImgs.a4.src = shuffled[3 % shuffled.length] || "";
-  // update periodically (every 10s)
+  // change every 10s
   setInterval(()=>{
-    const s2 = shuffle([...images]);
-    animeImgs.a1.style.opacity = 0; animeImgs.a2.style.opacity = 0; animeImgs.a3.style.opacity = 0; animeImgs.a4.style.opacity = 0;
-    setTimeout(()=>{
-      animeImgs.a1.src = s2[0 % s2.length] || "";
-      animeImgs.a2.src = s2[1 % s2.length] || "";
-      animeImgs.a3.src = s2[2 % s2.length] || "";
-      animeImgs.a4.src = s2[3 % s2.length] || "";
-      animeImgs.a1.style.opacity = 1; animeImgs.a2.style.opacity = 1; animeImgs.a3.style.opacity = 1; animeImgs.a4.style.opacity = 1;
-    }, 420);
+    const s2 = shuffle([...list]);
+    [corner1,corner2,corner3,corner4].forEach((img,i)=>{
+      img.style.opacity = 0;
+      setTimeout(()=> {
+        img.src = s2[i % s2.length];
+        img.style.opacity = 1;
+      }, 360);
+    });
   }, 10000);
-}).catch(()=>{/* ignore if missing */});
+}).catch(()=>{/* ignore missing images.json */});
 
-/* ---------------------------
-  time diff helpers
-   --------------------------- */
-/* return seconds difference (target - now) */
-function secondsUntil(target){
+/* ====== update functions ====== */
+/* elapsed (เพิ่ม) */
+function updateElapsed(){
   const now = new Date();
-  return Math.max(0, Math.floor((target - now) / 1000));
+  const t = diffYMDHMS(startDate, now);
+  setNum(yEl, t.y);
+  setNum(moEl, t.m);
+  setNum(dEl, pad(t.d));
+  setNum(hEl, pad(t.h));
+  setNum(mEl, pad(t.min));
+  setNum(sEl, pad(t.s));
 }
 
-/* Convert seconds -> {mo, d, h, m, s}
-   month approximated as 30 days (2592000s) — OK for UI countdown */
-function partsFromSeconds(totalSec){
-  let diff = Math.floor(totalSec);
-  const mo = Math.floor(diff / 2592000); diff %= 2592000;
-  const d  = Math.floor(diff / 86400);   diff %= 86400;
-  const h  = Math.floor(diff / 3600);    diff %= 3600;
-  const m  = Math.floor(diff / 60);
-  const s  = diff % 60;
-  return {mo, d, h, m, s};
-}
-
-/* compute next monthly anniversary target (next date with same day/time-of-month) */
-function nextMonthlyTarget(fromDate){
+/* next monthly anniversary (ลด) */
+function nextMonthlyTarget(){
   const now = new Date();
-  // start from this month's candidate
-  let target = new Date(now.getFullYear(), now.getMonth(), fromDate.getDate(), fromDate.getHours(), fromDate.getMinutes(), fromDate.getSeconds());
-  if(target <= now) {
-    // move to next month
-    target = new Date(now.getFullYear(), now.getMonth() + 1, fromDate.getDate(), fromDate.getHours(), fromDate.getMinutes(), fromDate.getSeconds());
-  }
+  let candidate = new Date(now.getFullYear(), startDate.getMonth(), startDate.getDate(), startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
+  // if candidate earlier than now, move forward by 1 year? For monthly, compute the next same day-of-month:
+  // We want "next month with same day/time" relative to now
+  let target = new Date(now.getFullYear(), now.getMonth(), startDate.getDate(), startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
+  if(target <= now) target = new Date(now.getFullYear(), now.getMonth()+1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
   return target;
 }
-
-/* compute next yearly anniversary target */
-function nextYearlyTarget(fromDate){
-  const now = new Date();
-  let target = new Date(now.getFullYear(), fromDate.getMonth(), fromDate.getDate(), fromDate.getHours(), fromDate.getMinutes(), fromDate.getSeconds());
-  if(target <= now){
-    target.setFullYear(target.getFullYear() + 1);
-  }
-  return target;
-}
-
-/* ---------------------------
-  update functions (core)
-   --------------------------- */
-function updateLove(){
-  const now = new Date();
-  let diff = Math.floor((now - startDate) / 1000);
-  // years / months / days / hours / minutes / seconds passed
-  const y = Math.floor(diff / 31536000); diff %= 31536000;
-  const mo = Math.floor(diff / 2592000); diff %= 2592000;
-  const d = Math.floor(diff / 86400); diff %= 86400;
-  const h = Math.floor(diff / 3600); diff %= 3600;
-  const m = Math.floor(diff / 60);
-  const s = diff % 60;
-
-  setNum(yEl, y);
-  setNum(moEl, mo);
-  setNum(dEl, pad(d));
-  setNum(hEl, h);
-  setNum(mEl, pad(m));
-  setNum(sEl, pad(s));
-}
-
-/* monthly countdown (to next monthly anniversary) */
 function updateMonthAnniv(){
-  const target = nextMonthlyTarget(startDate);
-  const sec = secondsUntil(target);
-  const parts = partsFromSeconds(sec);
-  setNum(am_d, parts.d);
-  setNum(am_h, parts.h);
-  setNum(am_m, parts.m);
-  setNum(am_s, parts.s);
+  const now = new Date();
+  const target = nextMonthlyTarget();
+  const diff = diffYMDHMS(now, target);
+  setNum(am_d, diff.d);
+  setNum(am_h, pad(diff.h));
+  setNum(am_m, pad(diff.min));
+  setNum(am_s, pad(diff.s));
 }
 
-/* yearly countdown (to next yearly anniversary) */
+/* next yearly anniversary (ลด) */
+function nextYearlyTarget(){
+  const now = new Date();
+  let target = new Date(now.getFullYear(), startDate.getMonth(), startDate.getDate(), startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
+  if(target <= now) target.setFullYear(target.getFullYear() + 1);
+  return target;
+}
 function updateYearAnniv(){
-  const target = nextYearlyTarget(startDate);
-  const sec = secondsUntil(target);
-  const parts = partsFromSeconds(sec);
-  // years that will be reached on that target
+  const now = new Date();
+  const target = nextYearlyTarget();
+  const diff = diffYMDHMS(now, target);
   const yearsWillBe = target.getFullYear() - startDate.getFullYear();
-  setNum(ay_mo, parts.mo);
-  setNum(ay_d, parts.d);
-  setNum(ay_h, parts.h);
-  setNum(ay_m, parts.m);
-  setNum(ay_s, parts.s);
+  setNum(ay_mo, diff.m);
+  setNum(ay_d, diff.d);
+  setNum(ay_h, pad(diff.h));
+  setNum(ay_m, pad(diff.min));
+  setNum(ay_s, pad(diff.s));
   setNum(ay_y, yearsWillBe);
 }
 
-/* run all updates */
+/* tick */
 function tickAll(){
-  updateLove();
+  updateElapsed();
   updateMonthAnniv();
   updateYearAnniv();
 }
-
-/* initial tick and interval */
 tickAll();
 setInterval(tickAll, 1000);
 
-/* ---------------------------
-  small utilities / UI
-   --------------------------- */
+/* ====== UI helpers ====== */
 function toggleTheme(){ document.body.classList.toggle("dark"); }
-function showOverlay(id){ document.getElementById(id).style.display = "flex"; }
+function openMemory(){ document.getElementById("memoryOverlay").style.display = "flex"; }
 function closeOverlay(id){ document.getElementById(id).style.display = "none"; }
-function openMemory(){ showOverlay("memoryOverlay"); }
 
-/* simple audio handling (if songs array provided) */
-const music = document.getElementById("music");
-function randomSong(){
-  if(!songs || songs.length === 0) return;
-  music.src = songs[Math.floor(Math.random()*songs.length)];
-  music.play();
-}
-if(songs.length > 0){
-  music.onended = randomSong;
-  randomSong();
-}
-
-/* popup on exact anniversary (year) */
-function checkExactYearAnniv(){
+/* optional: small fireworks at exact anniv */
+function checkExactAnniv(){
   const now = new Date();
   if(now.getMonth() === startDate.getMonth() && now.getDate() === startDate.getDate() &&
      now.getHours() === startDate.getHours() && Math.abs(now.getMinutes() - startDate.getMinutes()) < 1){
-    // show popup (only when exact moment; adjust tolerance if needed)
-    showOverlay("annivOverlay");
-    fireworks();
+    document.getElementById("annivOverlay").style.display = "flex";
   }
 }
-setInterval(checkExactYearAnniv, 30*1000); // check every 30s
-
-/* fireworks effect (simple) */
-function fireworks(){
-  const times = 16;
-  let i = 0;
-  const id = setInterval(()=>{
-    const f = document.createElement("div");
-    f.className = "fire";
-    f.style.left = Math.random()*100 + "vw";
-    f.style.top  = Math.random()*80 + "vh";
-    f.textContent = "🎆";
-    document.body.appendChild(f);
-    setTimeout(()=>f.remove(), 1800);
-    i++;
-    if(i >= times) clearInterval(id);
-  }, 120);
-}
-
-/* nice little heart ambient */
-setInterval(()=>{
-  const h = document.createElement("div");
-  h.className = "heart";
-  h.style.position = "fixed";
-  h.style.left = Math.random()*100 + "vw";
-  h.style.bottom = "-10px";
-  h.style.fontSize = (10 + Math.random()*18) + "px";
-  h.style.opacity = .12;
-  h.textContent = "💗";
-  document.body.appendChild(h);
-  setTimeout(()=> h.remove(), 9000);
-}, 900);
-
-/* end script */
+setInterval(checkExactAnniv, 30*1000);
 </script>
 </body>
 </html>
