@@ -1,504 +1,410 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>เว็บสำหรับเรา</title>
-
 <style>
-:root{
- --bg1:#ff758c;--bg2:#ff7eb3;--card:#fff;--text:#333;
-}
-body.dark{
- --bg1:#0f2027;--bg2:#203a43;--card:#1e293b;--text:#f8fafc;
-}
-.photo {
-  width: 100%;
-  max-width: 360px;
-  height: 480px;
-  object-fit: cover;
-}
-body{
- margin:0;
- font-family:system-ui;
- min-height:100vh;
- color:#e5e7eb;
- overflow:auto;
- position:relative;
- z-index: 0;
-}
+:root{ --text:#e5e7eb; }
+body{ margin:0; font-family:system-ui; min-height:100vh; color:var(--text); overflow:auto; position:relative; z-index:0; }
 
-/* พื้นหลังเบลอ */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
+/* blurred background */
+body::before{
+  content:"";
+  position:fixed; inset:0;
   background: url("./images/bg-daisy-purple.jpg") center/cover no-repeat;
   filter: blur(18px) brightness(.85) saturate(1.2);
   transform: scale(1.12);
-  z-index: -1;
+  z-index:-2;
 }
-
-/* ไล่แสงกลางคืนทับ */
 body::after{
   content:"";
-  position:fixed;
-  inset:0;
+  position:fixed; inset:0;
   background:
-    radial-gradient(circle at top, rgba(168,85,247,.15), transparent 65%),
-    radial-gradient(circle at bottom, rgba(236,72,153,.12), transparent 65%);
+    radial-gradient(circle at top, rgba(168,85,247,.12), transparent 65%),
+    radial-gradient(circle at bottom, rgba(236,72,153,.10), transparent 65%);
   z-index:-1;
 }
 
-.time-box{
-  height: 1.4em;
-  overflow: hidden;
-  display: inline-block;
+/* layout + center box */
+.layout{ min-height:100vh; display:flex; align-items:center; justify-content:center; position:relative; padding: 40px 16px; }
+.center-text{
+  position:relative; text-align:center; max-width:360px;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  border-radius:20px; padding:22px; box-shadow:0 12px 30px rgba(0,0,0,.35);
+  z-index:3;
 }
 
-.time-num{
-  display: inline-block;
-  transition: transform .3s ease, opacity .3s ease;
-}
-.time-num.up{
-  transform: translateY(-100%);
-  opacity: 0;
-}
-.time-num.down{
-  transform: translateY(100%);
-  opacity: 0;
-}
+/* anime pics around */
+.anime{ position:absolute; width:120px; height:160px; object-fit:cover; border-radius:14px; box-shadow:0 10px 25px rgba(0,0,0,.5); opacity:.95; transition:opacity .5s ease; z-index:2; }
+.a1{ top:8%; left:6%; }
+.a2{ top:8%; right:6%; }
+.a3{ bottom:8%; left:6%; }
+.a4{ bottom:8%; right:6%; }
 
+/* time number styling + animation classes */
+.time-line{ margin:6px 0; line-height:1.5; font-size:0.95rem; color:#f8fafc; }
+.time-row{ margin:6px 0; }
+
+/* reusable number slot */
 .num{
   display:inline-block;
   min-width:2ch;
   text-align:center;
-  transition: transform .35s ease, opacity .35s ease;
+  transition: transform .28s ease, opacity .28s ease;
+  will-change: transform, opacity;
+  font-weight:600;
 }
 
-.num.up{
-  transform: translateY(-8px);
-  opacity:0;
-}
+/* movement classes */
+.num.up{ transform: translateY(-10px); opacity:0; }
+.num.down{ transform: translateY(10px); opacity:0; }
 
-.num.down{
-  transform: translateY(8px);
-  opacity:0;
-}
- 
-.info{
- margin-top:10px;
- line-height:1.6;
- font-size:.95rem;
-}
-
-.info p{
- margin:6px 0;
-}
-
-.info button{
- margin-top:12px;
- padding:10px 18px;
- border:none;
- border-radius:999px;
- background:linear-gradient(135deg,#ec4899,#a855f7);
- color:white;
- font-size:1rem;
- box-shadow:0 8px 20px rgba(0,0,0,.4);
-}
-.matrix{
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  grid-template-rows: auto auto;
-  align-items: center;
-  text-align: center;
-  gap: 8px;
-}
-.layout{
-  min-height: 100vh;
-  display: flex;
-  align-items: center;   /* กลางแนวตั้ง */
-  justify-content: center; /* กลางแนวนอน */
-  position: relative;
-}
-
-.center-text{
-  position: relative;
-  text-align: center;
-  max-width: 320px;
-
-  background: rgba(0,0,0,.45);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-
-  border-radius: 22px;
-  padding: 24px 22px;
-  box-shadow: 0 12px 30px rgba(0,0,0,.35);
-}
-
-.anime{
- position: absolute;
- width:120px;
- height:160px;
- object-fit:cover;
- border-radius:14px;
- box-shadow:0 10px 25px rgba(0,0,0,.5);
- opacity:.95;
- transition: opacity .5s ease;
- position: absolute;
- z-index: 2;   /* รูปทั้งหมดต่ำกว่ากล่อง */
-}
-
-.a1{ top: 10%; left: 8%; }
-.a2{ top: 10%; right: 8%; }
-.a3{ bottom: 10%; left: 8%; }
-.a4{ bottom: 10%; right: 8%; }
- 
-/* มือถือ */
-@media(max-width:600px){
- .layout{
-   grid-template-columns:1fr 1fr;
-   grid-template-rows:auto auto auto;
- }
- .center-text{
-   grid-column:1 / span 2;
-   grid-row:2;
-   position: relative;
-   z-index: 3;   /* กล่องอยู่บนสุด */
- }
-}
- 
-.card{
- width:90%;max-width:420px;background:var(--card);
- border-radius:24px;padding:24px;text-align:center;
- box-shadow:0 20px 40px rgba(0,0,0,.25);z-index:2;
-}
-img {
-  border-radius: 18px;
-  margin: 14px 0;
-}
+/* button */
 button{
- padding:10px 16px;margin:4px;border:none;border-radius:999px;
- background:#ff758c;color:#fff;font-size:1rem;
+  padding:10px 16px;margin:8px 6px;border:none;border-radius:999px;
+  background:linear-gradient(135deg,#ec4899,#a855f7); color:white; font-size:1rem; box-shadow:0 8px 20px rgba(0,0,0,.35);
 }
-.heart{position:absolute;bottom:-20px;opacity:.25;animation:float linear;}
-@keyframes float{to{transform:translateY(-120vh);}}
 
-/* Overlay */
-.overlay{
- position:fixed;inset:0;background:rgba(0,0,0,.85);
- display:none;align-items:center;justify-content:center;
- color:white;text-align:center;z-index:10;padding:20px;
-}
-.box{
- background:#111827;border-radius:20px;padding:20px;
- max-width:420px;width:100%;
-}
-.fire{position:absolute;font-size:26px;animation:boom 2s ease-out;}
-@keyframes boom{
- from{transform:scale(0);opacity:1;}
- to{transform:scale(2);opacity:0;}
+/* overlay and box */
+.overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.7); z-index:10; padding:20px; }
+.box{ background:#0f1724; border-radius:12px; padding:18px; color:#fff; max-width:420px; width:100%; }
+
+/* responsive */
+@media (max-width:600px){
+  .anime{ display:none; } /* hide corner images on small screens for clarity */
+  .center-text{ width:92%; padding:18px; }
 }
 </style>
 </head>
-
 <body>
 
-<div class="layout">
-  <img class="anime a1">
-  <img class="anime a2">
+<!-- corner images -->
+<img class="anime a1" id="a1">
+<img class="anime a2" id="a2">
+<img class="anime a3" id="a3">
+<img class="anime a4" id="a4">
 
+<div class="layout">
   <div class="center-text">
     <h1>โอ๊ค ❤️ พระอินทร์</h1>
 
-    <div class="info">
-      <p id="loveTime"></p>
-      <p id="annivMonth"></p>
-      <p id="annivYear"></p>
+    <!-- MAIN time block (leaving words as requested, but numbers are separate spans) -->
+    <div class="time-line">
+      <div class="time-row">เราคบกันมา</div>
+      <div class="time-row">
+        <span class="num" id="y">0</span> ปี
+        <span style="display:inline-block;width:8px;"></span>
+        <span class="num" id="mo">0</span> เดือน
+        <span style="display:inline-block;width:8px;"></span>
+        <span class="num" id="d">00</span> วัน
+      </div>
 
+      <div class="time-row">
+        <span class="num" id="h">00</span> ชม.
+        <span style="display:inline-block;width:8px;"></span>
+        <span class="num" id="m">00</span> นาที
+        <span style="display:inline-block;width:8px;"></span>
+        <span class="num" id="s">00</span> วินาที
+      </div>
+    </div>
+
+    <!-- divider -->
+    <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:14px 0;">
+
+    <!-- ANNIVERSARY (month) -->
+    <div id="annivMonth" class="time-line" style="margin-top:6px;">
+      <div class="time-row">-</div>
+      <div class="time-row">อีก
+        <span class="num" id="am_d">00</span> วัน
+        <span style="display:inline-block;width:8px;"></span>
+        <span class="num" id="am_h">00</span> ชม.
+        <span style="display:inline-block;width:8px;"></span>
+        <span class="num" id="am_m">00</span> นาที
+        <span style="display:inline-block;width:8px;"></span>
+        <span class="num" id="am_s">00</span> วินาที
+      </div>
+      <div class="time-row">ถึงวันครบรอบ</div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:14px 0;">
+
+    <!-- ANNIVERSARY (year) -->
+    <div id="annivYear" class="time-line">
+      <div class="time-row">-</div>
+      <div class="time-row">อีก
+        <span class="num" id="ay_mo">00</span> เดือน
+        <span style="display:inline-block;width:8px;"></span>
+        <span class="num" id="ay_d">00</span> วัน
+        <span style="display:inline-block;width:8px;"></span>
+        <span class="num" id="ay_h">00</span> ชม.
+        <span style="display:inline-block;width:8px;"></span>
+        <span class="num" id="ay_m">00</span> นาที
+        <span style="display:inline-block;width:8px;"></span>
+        <span class="num" id="ay_s">00</span> วินาที
+      </div>
+      <div class="time-row">จะเป็น <span class="num" id="ay_y">0</span> ปี</div>
+    </div>
+
+    <div style="margin-top:14px;">
+      <button onclick="toggleTheme()">🌙 / ☀️</button>
       <button onclick="openMemory()">❤ กล่องความทรงจำ 💜</button>
     </div>
   </div>
-
-  <img class="anime a3">
-  <img class="anime a4">
 </div>
 
-
-<!-- ครบรอบ -->
-<div id="annivOverlay" class="overlay">
- <div class="box">
-  <h2>🎉 สุขสันต์วันครบรอบนะคะ 🎉</h2>
-  <p>
-   ขอบคุณที่อยู่ด้วยกันมาขนาดนี้แล้วยัังไม่เบื่อกันนะคะ ❤️<br>
-   ขอให้มีความสุขแบบนี้ด้วยกันไปตลอดนะคะ รักเธอนะ 😊
-  </p>
-  <button onclick="closeOverlay('annivOverlay')">ปิด</button>
- </div>
-</div>
-
-<!-- วันเกิดอิน -->
-<div id="birthdayOverlay" class="overlay">
- <div class="box">
-  <h2>🎂 Happy Birthday Indra 🎂</h2>
-  <p>
-   ขอให้ปีนี้ยิ้มเยอะๆ มีความสุขมากๆ ❤️<br>
-   ขอให้จำไว้ว่า เค้าจะอยู่ตรงนี้เสมอนะคะ
-  </p>
-  <button onclick="closeOverlay('birthdayOverlay')">ปิด</button>
- </div>
-</div>
-
-<!-- กล่องความทรงจำ -->
-<div id="memoryOverlay" class="overlay">
- <div class="box">
-  <h2>📦 กล่องความทรงจำ</h2>
-  <p>
-   เราเป็นคนคุยกัน<br>
-   วันที่ 6 พฤศจิกา เวลา 19:02<br><br>
-   ผ่านไป 2 วัันเราเริ่มคบกัน<br>
-   วันที่ 8 พฤศจิกา เวลา 11:07<br><br>
-   เราเจอกันครั้งแรก ที่ BTS<br>
-   วันที่ 23 ธันวา เวลา 10:05 (โดยประมาณ ดีใจจนลืมดูเวลา)
-  </p>
-  <button onclick="closeOverlay('memoryOverlay')">ปิด</button>
- </div>
-</div>
+<!-- overlays -->
+<div id="memoryOverlay" class="overlay"><div class="box"><h3>📦 กล่องความทรงจำ</h3><p>ตัวอย่างความทรงจำไว้ที่นี่...</p><button onclick="closeOverlay('memoryOverlay')">ปิด</button></div></div>
+<div id="annivOverlay" class="overlay"><div class="box"><h3>🎉 ครบรอบ</h3><p>สุขสันต์ครบรอบนะ!</p><button onclick="closeOverlay('annivOverlay')">ปิด</button></div></div>
+<div id="birthdayOverlay" class="overlay"><div class="box"><h3>🎂 Happy Birthday</h3><p>สุขสันต์วันเกิด!</p><button onclick="closeOverlay('birthdayOverlay')">ปิด</button></div></div>
 
 <audio id="music"></audio>
 
-
 <script>
-const songs = [];           // ถ้ายังไม่ใช้เพลง
-const birthdayMonth = -1;  // ปิดระบบวันเกิดชั่วคราว
+/* ---------------------------
+  Config / initial setup
+   --------------------------- */
+const startDate = new Date("2024-11-08T11:07:00"); // ถ้าจะเปลี่ยน ให้แก้ตรงนี้
+const songs = []; // เพิ่มเพลงถ้ามี
+const birthdayMonth = -1; // ถ้าจะเปิดระบบวันเกิด ใส่เดือน 0..11
 const birthdayDay = -1;
+
+const yEl = document.getElementById("y");
+const moEl = document.getElementById("mo");
+const dEl = document.getElementById("d");
+const hEl = document.getElementById("h");
+const mEl = document.getElementById("m");
+const sEl = document.getElementById("s");
+
+const am_d = document.getElementById("am_d");
+const am_h = document.getElementById("am_h");
+const am_m = document.getElementById("am_m");
+const am_s = document.getElementById("am_s");
+
+const ay_mo = document.getElementById("ay_mo");
+const ay_d  = document.getElementById("ay_d");
+const ay_h  = document.getElementById("ay_h");
+const ay_m  = document.getElementById("ay_m");
+const ay_s  = document.getElementById("ay_s");
+const ay_y  = document.getElementById("ay_y");
+
+const animeImgs = {
+  a1: document.getElementById("a1"),
+  a2: document.getElementById("a2"),
+  a3: document.getElementById("a3"),
+  a4: document.getElementById("a4"),
+};
 let images = [];
-const animeImgs = document.querySelectorAll(".anime");
 
-function shuffle(arr){
-  return arr.sort(() => Math.random() - 0.5);
+/* helper */
+function pad(n){ return String(n).padStart(2,"0"); }
+
+function setNum(el, newVal){
+  // animate up/down on change
+  const old = el.textContent;
+  if(String(old) === String(newVal)) return;
+  const upOrDown = Number(newVal) > Number(old) ? "up" : "down";
+  el.classList.add(upOrDown);
+  setTimeout(()=> {
+    el.textContent = String(newVal);
+    el.classList.remove(upOrDown);
+  }, 160);
 }
 
-function updateAnimeImages(){
+/* ---------------------------
+  background corner images: load from images.json
+   --------------------------- */
+function shuffle(arr){ return arr.sort(()=>Math.random()-0.5); }
+
+fetch("data/images.json").then(r=>r.json()).then(list=>{
+  images = list;
   const shuffled = shuffle([...images]);
-  animeImgs.forEach((img, i) => {
-    img.style.opacity = 0;
-    setTimeout(() => {
-      img.src = shuffled[i % shuffled.length];
-      img.style.opacity = 1;
-    }, 500);
-  });
+  // fill four corners (wrap if less than 4)
+  animeImgs.a1.src = shuffled[0 % shuffled.length] || "";
+  animeImgs.a2.src = shuffled[1 % shuffled.length] || "";
+  animeImgs.a3.src = shuffled[2 % shuffled.length] || "";
+  animeImgs.a4.src = shuffled[3 % shuffled.length] || "";
+  // update periodically (every 10s)
+  setInterval(()=>{
+    const s2 = shuffle([...images]);
+    animeImgs.a1.style.opacity = 0; animeImgs.a2.style.opacity = 0; animeImgs.a3.style.opacity = 0; animeImgs.a4.style.opacity = 0;
+    setTimeout(()=>{
+      animeImgs.a1.src = s2[0 % s2.length] || "";
+      animeImgs.a2.src = s2[1 % s2.length] || "";
+      animeImgs.a3.src = s2[2 % s2.length] || "";
+      animeImgs.a4.src = s2[3 % s2.length] || "";
+      animeImgs.a1.style.opacity = 1; animeImgs.a2.style.opacity = 1; animeImgs.a3.style.opacity = 1; animeImgs.a4.style.opacity = 1;
+    }, 420);
+  }, 10000);
+}).catch(()=>{/* ignore if missing */});
+
+/* ---------------------------
+  time diff helpers
+   --------------------------- */
+/* return seconds difference (target - now) */
+function secondsUntil(target){
+  const now = new Date();
+  return Math.max(0, Math.floor((target - now) / 1000));
 }
 
-fetch("data/images.json")
-  .then(r => r.json())
-  .then(list => {
-    images = list;
-    updateAnimeImages();              // แสดงครั้งแรก
-    setInterval(updateAnimeImages, 10000); // 🔁 ทุก 10 วินาที
-  });
-
- function setNum(el, newVal){
-  const oldVal = el.textContent;
-  if(oldVal === String(newVal)) return;
-
-  el.classList.add(newVal > oldVal ? "down" : "up");
-
-  setTimeout(()=>{
-    el.textContent = pad(newVal);
-    el.classList.remove("up","down");
-  },150);
+/* Convert seconds -> {mo, d, h, m, s}
+   month approximated as 30 days (2592000s) — OK for UI countdown */
+function partsFromSeconds(totalSec){
+  let diff = Math.floor(totalSec);
+  const mo = Math.floor(diff / 2592000); diff %= 2592000;
+  const d  = Math.floor(diff / 86400);   diff %= 86400;
+  const h  = Math.floor(diff / 3600);    diff %= 3600;
+  const m  = Math.floor(diff / 60);
+  const s  = diff % 60;
+  return {mo, d, h, m, s};
 }
 
-
-// เพลงสุ่มต่อเนื่อง
-function randomSong(){
- music.src=songs[Math.floor(Math.random()*songs.length)];
- music.play();
+/* compute next monthly anniversary target (next date with same day/time-of-month) */
+function nextMonthlyTarget(fromDate){
+  const now = new Date();
+  // start from this month's candidate
+  let target = new Date(now.getFullYear(), now.getMonth(), fromDate.getDate(), fromDate.getHours(), fromDate.getMinutes(), fromDate.getSeconds());
+  if(target <= now) {
+    // move to next month
+    target = new Date(now.getFullYear(), now.getMonth() + 1, fromDate.getDate(), fromDate.getHours(), fromDate.getMinutes(), fromDate.getSeconds());
+  }
+  return target;
 }
-music.onended=randomSong;
-randomSong();
 
-function toggleMusic(){music.paused?music.play():music.pause();}
-function toggleTheme(){document.body.classList.toggle("dark");}
+/* compute next yearly anniversary target */
+function nextYearlyTarget(fromDate){
+  const now = new Date();
+  let target = new Date(now.getFullYear(), fromDate.getMonth(), fromDate.getDate(), fromDate.getHours(), fromDate.getMinutes(), fromDate.getSeconds());
+  if(target <= now){
+    target.setFullYear(target.getFullYear() + 1);
+  }
+  return target;
+}
 
-// เวลา
-const startDate = new Date("2024-11-08T11:07:00");
-
-function pad(n){ return n.toString().padStart(2,"0"); }
-
+/* ---------------------------
+  update functions (core)
+   --------------------------- */
 function updateLove(){
-  let diff = Math.floor((Date.now() - startDate) / 1000);
-
+  const now = new Date();
+  let diff = Math.floor((now - startDate) / 1000);
+  // years / months / days / hours / minutes / seconds passed
   const y = Math.floor(diff / 31536000); diff %= 31536000;
   const mo = Math.floor(diff / 2592000); diff %= 2592000;
   const d = Math.floor(diff / 86400); diff %= 86400;
   const h = Math.floor(diff / 3600); diff %= 3600;
   const m = Math.floor(diff / 60);
   const s = diff % 60;
-  const yEl  = document.getElementById("y");
-  const moEl = document.getElementById("mo");
-  const dEl  = document.getElementById("d");
-  const hEl  = document.getElementById("h");
-  const mEl  = document.getElementById("m");
-  const sEl  = document.getElementById("s");
 
-function updateNumber(el, newVal){
-  const oldVal = el.textContent;
-
-  if(oldVal === newVal.toString()) return;
-
-  const dir = Number(newVal) > Number(oldVal) ? "up" : "down";
-  el.classList.add(dir);
-
-  setTimeout(()=>{
-    el.textContent = newVal;
-    el.classList.remove(dir);
-  },180);
+  setNum(yEl, y);
+  setNum(moEl, mo);
+  setNum(dEl, pad(d));
+  setNum(hEl, h);
+  setNum(mEl, pad(m));
+  setNum(sEl, pad(s));
 }
 
-
-  <p>
-เราคบกันมา<br>
-
-<span class="time-box"><span id="y" class="time-num">0</span></span> ปี
-<span class="time-box"><span id="mo" class="time-num">0</span></span> เดือน
-<span class="time-box"><span id="d" class="time-num">00</span></span> วัน
-<br>
-<span class="time-box"><span id="h" class="time-num">00</span></span> ชม.
-<span class="time-box"><span id="m" class="time-num">00</span></span> นาที
-<span class="time-box"><span id="s" class="time-num">00</span></span> วินาที
-</p>
-
-
+/* monthly countdown (to next monthly anniversary) */
+function updateMonthAnniv(){
+  const target = nextMonthlyTarget(startDate);
+  const sec = secondsUntil(target);
+  const parts = partsFromSeconds(sec);
+  setNum(am_d, parts.d);
+  setNum(am_h, parts.h);
+  setNum(am_m, parts.m);
+  setNum(am_s, parts.s);
 }
 
-// ครบรอบ “เดือน”
-function nextMonthAnniv(){
-  const now = new Date();
-  let target = new Date(now);
-  target.setMonth(target.getMonth() + 1);
-  target.setDate(startDate.getDate());
-  target.setHours(startDate.getHours(), startDate.getMinutes(), 0);
+/* yearly countdown (to next yearly anniversary) */
+function updateYearAnniv(){
+  const target = nextYearlyTarget(startDate);
+  const sec = secondsUntil(target);
+  const parts = partsFromSeconds(sec);
+  // years that will be reached on that target
+  const yearsWillBe = target.getFullYear() - startDate.getFullYear();
+  setNum(ay_mo, parts.mo);
+  setNum(ay_d, parts.d);
+  setNum(ay_h, parts.h);
+  setNum(ay_m, parts.m);
+  setNum(ay_s, parts.s);
+  setNum(ay_y, yearsWillBe);
+}
 
-  if(target < now) target.setMonth(target.getMonth() + 1);
-
-  let diff = Math.floor((target - now) / 1000);
-  const mo = Math.floor(diff / 2592000); diff %= 2592000;
-  const d = Math.floor(diff / 86400); diff %= 86400;
-  const h = Math.floor(diff / 3600); diff %= 3600;
-  const m = Math.floor(diff / 60);
-  const s = diff % 60;
-  setNum(document.getElementById("am_d"), d);
-  setNum(document.getElementById("am_h"), h);
-  setNum(document.getElementById("am_m"), m);
-  setNum(document.getElementById("am_s"), s);
-
-
-  <div id="annivMonth">
-  อีก
-  <span class="num" id="am_d">00</span> วัน
-  <span class="num" id="am_h">00</span> ชม.
-  <span class="num" id="am_m">00</span> นาที
-  <span class="num" id="am_s">00</span> วินาที
-  <br>ถึงวันครบรอบ
-</div>
-
-// ครบรอบ “ปี”
-function nextYearAnniv(){
-  const now = new Date();
-
-  // วันครบรอบปีถัดไป
-  let target = new Date(
-    now.getFullYear(),
-    startDate.getMonth(),
-    startDate.getDate(),
-    startDate.getHours(),
-    startDate.getMinutes(),
-    startDate.getSeconds()
-  );
-
-  if (target <= now) {
-    target.setFullYear(target.getFullYear() + 1);
-  }
-
-  // เวลาที่เหลือ
-  let diff = Math.floor((target - now) / 1000);
-
-  const mo = Math.floor(diff / 2592000); diff %= 2592000;
-  const d  = Math.floor(diff / 86400);   diff %= 86400;
-  const h  = Math.floor(diff / 3600);    diff %= 3600;
-  const m  = Math.floor(diff / 60);
-  const s  = diff % 60;
-  setNum(document.getElementById("ay_mo"), mo);
-  setNum(document.getElementById("ay_d"), d);
-  setNum(document.getElementById("ay_h"), h);
-  setNum(document.getElementById("ay_m"), m);
-  setNum(document.getElementById("ay_s"), s);
-  
-  document.getElementById("ay_y").textContent = yearsWillBe;
-
-  <div id="annivYear">
-  อีก
-  <span class="num" id="ay_mo">00</span> เดือน
-  <span class="num" id="ay_d">00</span> วัน
-  <span class="num" id="ay_h">00</span> ชม.
-  <span class="num" id="ay_m">00</span> นาที
-  <span class="num" id="ay_s">00</span> วินาที
-  <br>จะเป็น <span id="ay_y">0</span> ปี
-</div>
-
-setInterval(()=>{
+/* run all updates */
+function tickAll(){
   updateLove();
-  nextMonthAnniv();
-  nextYearAnniv();
-},1000);
-
-
-// ครบรอบ
-function checkAnniv(){
- const now=new Date();
- const ann=new Date(now.getFullYear(),10,8);
- if(ann<now)ann.setFullYear(ann.getFullYear()+1);
- const days=Math.ceil((ann-now)/(1000*60*60*24));
- anniv.innerHTML=`🎂 อีก ${days} วันจะครบรอบปี`;
- if(days===0) showOverlay("annivOverlay");
-}
-checkAnniv();
-
-// วันเกิดอิน
-const now=new Date();
-if(now.getMonth()===birthdayMonth && now.getDate()===birthdayDay){
- showOverlay("birthdayOverlay");
- fireworks();
+  updateMonthAnniv();
+  updateYearAnniv();
 }
 
-// เอฟเฟกต์หัวใจ
-setInterval(()=>{
- const h=document.createElement("div");
- h.className="heart";h.innerText="💗";
- h.style.left=Math.random()*100+"vw";
- h.style.animationDuration=6+Math.random()*4+"s";
- document.body.appendChild(h);
- setTimeout(()=>h.remove(),10000);
-},700);
+/* initial tick and interval */
+tickAll();
+setInterval(tickAll, 1000);
 
-// เอฟเฟกต์พิเศษ
+/* ---------------------------
+  small utilities / UI
+   --------------------------- */
+function toggleTheme(){ document.body.classList.toggle("dark"); }
+function showOverlay(id){ document.getElementById(id).style.display = "flex"; }
+function closeOverlay(id){ document.getElementById(id).style.display = "none"; }
+function openMemory(){ showOverlay("memoryOverlay"); }
+
+/* simple audio handling (if songs array provided) */
+const music = document.getElementById("music");
+function randomSong(){
+  if(!songs || songs.length === 0) return;
+  music.src = songs[Math.floor(Math.random()*songs.length)];
+  music.play();
+}
+if(songs.length > 0){
+  music.onended = randomSong;
+  randomSong();
+}
+
+/* popup on exact anniversary (year) */
+function checkExactYearAnniv(){
+  const now = new Date();
+  if(now.getMonth() === startDate.getMonth() && now.getDate() === startDate.getDate() &&
+     now.getHours() === startDate.getHours() && Math.abs(now.getMinutes() - startDate.getMinutes()) < 1){
+    // show popup (only when exact moment; adjust tolerance if needed)
+    showOverlay("annivOverlay");
+    fireworks();
+  }
+}
+setInterval(checkExactYearAnniv, 30*1000); // check every 30s
+
+/* fireworks effect (simple) */
 function fireworks(){
- setInterval(()=>{
-  const f=document.createElement("div");
-  f.className="fire";f.innerText="🎆";
-  f.style.left=Math.random()*100+"vw";
-  f.style.top=Math.random()*100+"vh";
-  document.body.appendChild(f);
-  setTimeout(()=>f.remove(),2000);
- },300);
+  const times = 16;
+  let i = 0;
+  const id = setInterval(()=>{
+    const f = document.createElement("div");
+    f.className = "fire";
+    f.style.left = Math.random()*100 + "vw";
+    f.style.top  = Math.random()*80 + "vh";
+    f.textContent = "🎆";
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(), 1800);
+    i++;
+    if(i >= times) clearInterval(id);
+  }, 120);
 }
 
-function showOverlay(id){document.getElementById(id).style.display="flex";}
-function closeOverlay(id){document.getElementById(id).style.display="none";}
-function openMemory(){showOverlay("memoryOverlay");}
-</script>
+/* nice little heart ambient */
+setInterval(()=>{
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.style.position = "fixed";
+  h.style.left = Math.random()*100 + "vw";
+  h.style.bottom = "-10px";
+  h.style.fontSize = (10 + Math.random()*18) + "px";
+  h.style.opacity = .12;
+  h.textContent = "💗";
+  document.body.appendChild(h);
+  setTimeout(()=> h.remove(), 9000);
+}, 900);
 
+/* end script */
+</script>
 </body>
 </html>
