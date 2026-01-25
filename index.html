@@ -290,8 +290,11 @@ function updateLove(){
   const m = Math.floor(diff / 60);
   const s = diff % 60;
 
-  loveTime.innerHTML =
-   `เราคบกันมา<br> ${y} ปี ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที`;
+  loveTime.innerHTML = `
+เราคบกันมา<br>
+${y} ปี ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที
+`;
+
 }
 
 // ครบรอบ “เดือน”
@@ -312,7 +315,8 @@ function nextMonthAnniv(){
   const s = diff % 60;
 
   annivMonth.innerHTML =
-   `อีก ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที<br> ถึงวันครบรอบ`;
+   `-<br><br>
+   อีก ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที<br> ถึงวันครบรอบ`;
 }
 
 // ครบรอบ “ปี”
@@ -346,7 +350,8 @@ function nextYearAnniv(){
   const yearsWillBe = target.getFullYear() - startDate.getFullYear();
 
   annivYear.innerHTML =
-    `อีก ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที<br>
+    `-<br><br>
+    อีก ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที<br>
      จะเป็น ${yearsWillBe} ปี`;
 }
 
