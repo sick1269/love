@@ -50,6 +50,42 @@ body::after{
   z-index:-1;
 }
 
+.time-box{
+  height: 1.4em;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.time-num{
+  display: inline-block;
+  transition: transform .3s ease, opacity .3s ease;
+}
+.time-num.up{
+  transform: translateY(-100%);
+  opacity: 0;
+}
+.time-num.down{
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.num{
+  display:inline-block;
+  min-width:2ch;
+  text-align:center;
+  transition: transform .35s ease, opacity .35s ease;
+}
+
+.num.up{
+  transform: translateY(-8px);
+  opacity:0;
+}
+
+.num.down{
+  transform: translateY(8px);
+  opacity:0;
+}
+ 
 .info{
  margin-top:10px;
  line-height:1.6;
@@ -117,8 +153,7 @@ body::after{
 .a2{ top: 10%; right: 8%; }
 .a3{ bottom: 10%; left: 8%; }
 .a4{ bottom: 10%; right: 8%; }
-
-
+ 
 /* มือถือ */
 @media(max-width:600px){
  .layout{
@@ -263,6 +298,18 @@ fetch("data/images.json")
     setInterval(updateAnimeImages, 10000); // 🔁 ทุก 10 วินาที
   });
 
+ function setNum(el, newVal){
+  const oldVal = el.textContent;
+  if(oldVal === String(newVal)) return;
+
+  el.classList.add(newVal > oldVal ? "down" : "up");
+
+  setTimeout(()=>{
+    el.textContent = pad(newVal);
+    el.classList.remove("up","down");
+  },150);
+}
+
 
 // เพลงสุ่มต่อเนื่อง
 function randomSong(){
@@ -289,11 +336,40 @@ function updateLove(){
   const h = Math.floor(diff / 3600); diff %= 3600;
   const m = Math.floor(diff / 60);
   const s = diff % 60;
+  const yEl  = document.getElementById("y");
+  const moEl = document.getElementById("mo");
+  const dEl  = document.getElementById("d");
+  const hEl  = document.getElementById("h");
+  const mEl  = document.getElementById("m");
+  const sEl  = document.getElementById("s");
 
-  loveTime.innerHTML = `
+function updateNumber(el, newVal){
+  const oldVal = el.textContent;
+
+  if(oldVal === newVal.toString()) return;
+
+  const dir = Number(newVal) > Number(oldVal) ? "up" : "down";
+  el.classList.add(dir);
+
+  setTimeout(()=>{
+    el.textContent = newVal;
+    el.classList.remove(dir);
+  },180);
+}
+
+
+  <p>
 เราคบกันมา<br>
-${y} ปี ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที
-`;
+
+<span class="time-box"><span id="y" class="time-num">0</span></span> ปี
+<span class="time-box"><span id="mo" class="time-num">0</span></span> เดือน
+<span class="time-box"><span id="d" class="time-num">00</span></span> วัน
+<br>
+<span class="time-box"><span id="h" class="time-num">00</span></span> ชม.
+<span class="time-box"><span id="m" class="time-num">00</span></span> นาที
+<span class="time-box"><span id="s" class="time-num">00</span></span> วินาที
+</p>
+
 
 }
 
@@ -313,11 +389,20 @@ function nextMonthAnniv(){
   const h = Math.floor(diff / 3600); diff %= 3600;
   const m = Math.floor(diff / 60);
   const s = diff % 60;
+  setNum(document.getElementById("am_d"), d);
+  setNum(document.getElementById("am_h"), h);
+  setNum(document.getElementById("am_m"), m);
+  setNum(document.getElementById("am_s"), s);
 
-  annivMonth.innerHTML =
-   `-<br><br>
-   อีก ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที<br> ถึงวันครบรอบ`;
-}
+
+  <div id="annivMonth">
+  อีก
+  <span class="num" id="am_d">00</span> วัน
+  <span class="num" id="am_h">00</span> ชม.
+  <span class="num" id="am_m">00</span> นาที
+  <span class="num" id="am_s">00</span> วินาที
+  <br>ถึงวันครบรอบ
+</div>
 
 // ครบรอบ “ปี”
 function nextYearAnniv(){
@@ -345,15 +430,23 @@ function nextYearAnniv(){
   const h  = Math.floor(diff / 3600);    diff %= 3600;
   const m  = Math.floor(diff / 60);
   const s  = diff % 60;
+  setNum(document.getElementById("ay_mo"), mo);
+  setNum(document.getElementById("ay_d"), d);
+  setNum(document.getElementById("ay_h"), h);
+  setNum(document.getElementById("ay_m"), m);
+  setNum(document.getElementById("ay_s"), s);
+  
+  document.getElementById("ay_y").textContent = yearsWillBe;
 
-  // ⭐ จำนวนปีที่จะครบจริง
-  const yearsWillBe = target.getFullYear() - startDate.getFullYear();
-
-  annivYear.innerHTML =
-    `-<br><br>
-    อีก ${mo} เดือน ${pad(d)} วัน ${h} ชม. ${pad(m)} นาที ${pad(s)} วินาที<br>
-     จะเป็น ${yearsWillBe} ปี`;
-}
+  <div id="annivYear">
+  อีก
+  <span class="num" id="ay_mo">00</span> เดือน
+  <span class="num" id="ay_d">00</span> วัน
+  <span class="num" id="ay_h">00</span> ชม.
+  <span class="num" id="ay_m">00</span> นาที
+  <span class="num" id="ay_s">00</span> วินาที
+  <br>จะเป็น <span id="ay_y">0</span> ปี
+</div>
 
 setInterval(()=>{
   updateLove();
