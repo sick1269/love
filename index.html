@@ -194,7 +194,7 @@ button{
 
     <div style="margin-top:14px;">
       <button onclick="openMemory()">❤ กล่องความทรงจำ 💜</button>
-      <button id="musicBtn" onclick="toggleMusic()">🔊 เปิดเพลง</button>
+      <button id="musicBtn" onclick="toggleMusic()">🔈 เปิดเพลง</button>
     </div>
   </div>
 </div>
@@ -212,11 +212,11 @@ button{
    --------------------------- */
 const startDate = new Date("2024-11-08T11:07:00"); // ถ้าจะเปลี่ยน ให้แก้ตรงนี้
 const songs = [
-  "music/Aikatsu Yurika Ichigo Glass Doll Master 4K.mp3",
-  "music/Blessing of the Nephilim Eileennoir Magnum.mp3",
-  "music/BLUE ENCOUNT Polaris.mp3",
-  "music/Hazbin Hotel Season 2 Gravity.mp3",
-  "music/Jessie J Bang Bang.mp3",
+  "music/Aikatsu!  Yurika  Ichigo  Glass Doll  Master 4K.mp3",
+  "music/Blessing of the Nephilim - Eileennoir (feat. Magnum)  Color Coded Lyrics_ ThaRomEng.mp3",
+  "music/BLUE ENCOUNT ポラリスMusic Videoアニメ僕のヒーローアカデミア第4期オープニングテーマ.mp3",
+  "music/Hazbin Hotel  Season 2 Gravity Clip  Prime Video.mp3",
+  "music/Jessie J - Bang Bang ft. Ariana Grande, Nicki Minaj.mp3",
   "music/Unholy.mp3"
 ]; // เพิ่มเพลงถ้ามี
 let audio = null;
@@ -239,7 +239,7 @@ function playRandomSong(){
 
   const song = songs[Math.floor(Math.random() * songs.length)];
   audio = new Audio(song);
-  audio.volume = 0.5; // 🔊 50%
+  audio.volume = 0.3; // 🔊 30%
   audio.play().catch(()=>{});
 
   // เพลงจบ → สุ่มใหม่
