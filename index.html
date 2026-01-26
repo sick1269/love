@@ -194,6 +194,7 @@ button{
 
     <div style="margin-top:14px;">
       <button onclick="openMemory()">❤ กล่องความทรงจำ 💜</button>
+      <button id="musicBtn" onclick="toggleMusic()">🔊 ปิด/เปิด เพลง</button>
     </div>
   </div>
 </div>
@@ -210,9 +211,63 @@ button{
   Config / initial setup
    --------------------------- */
 const startDate = new Date("2024-11-08T11:07:00"); // ถ้าจะเปลี่ยน ให้แก้ตรงนี้
-const songs = []; // เพิ่มเพลงถ้ามี
-const birthdayMonth = -1; // ถ้าจะเปิดระบบวันเกิด ใส่เดือน 0..11
-const birthdayDay = -1;
+const songs = [
+  "music/Aikatsu_Yurika_Ichigo_Glass_Doll_Master_4K.mp3",
+  "music/Blessing_of_the_Nephilim_Eileennoir_Magnum.mp3",
+  "music/BLUE_ENCOUNT_Polaris.mp3",
+  "music/Hazbin_Hotel_Season_2_Gravity.mp3",
+  "music/Jessie_J_Bang_Bang.mp3",
+  "music/Unholy.mp3"
+]; // เพิ่มเพลงถ้ามี
+let audio = null;
+let musicOn = true;
+
+// โหลดรายชื่อเพลง
+fetch("music/music.json")
+  .then(r => r.json())
+  .then(list => {
+    songs = list;
+    playRandomSong(); // เล่นทันทีตอนเข้าเว็บ
+  });
+
+function playRandomSong(){
+  if(!musicOn || songs.length === 0) return;
+
+  if(audio){
+    audio.pause();
+  }
+
+  const song = songs[Math.floor(Math.random() * songs.length)];
+  audio = new Audio(song);
+  audio.volume = 0.5; // 🔊 50%
+  audio.play().catch(()=>{});
+
+  // เพลงจบ → สุ่มใหม่
+  audio.onended = playRandomSong;
+}
+
+function toggleMusic(){
+  musicOn = !musicOn;
+
+  if(!musicOn && audio){
+    audio.pause();
+  }else{
+    playRandomSong();
+  }
+
+  document.getElementById("musicBtn").innerText =
+    musicOn ? "🔊 ปิดเพลง" : "🔈 เปิดเพลง";
+}
+
+// บังคับให้เริ่มหลังคลิกครั้งแรก (กัน browser บล็อก)
+window.addEventListener("click", ()=>{
+  if(!audio && songs.length){
+    playRandomSong();
+  }
+},{ once:true });
+  
+const birthdayMonth = 3; // ถ้าจะเปิดระบบวันเกิด ใส่เดือน 0..11
+const birthdayDay = 12;
 
 const yEl = document.getElementById("y");
 const moEl = document.getElementById("mo");
