@@ -234,55 +234,35 @@ let songs = [
   "music/Jessie J - Bang Bang ft. Ariana Grande, Nicki Minaj.mp3",
   "music/Unholy.mp3"
 ]; // เพิ่มเพลงถ้ามี
-let audio = null;
 let musicOn = false;
+const music = document.getElementById("music");
 
-// โหลดรายชื่อเพลง
-fetch("music/music.json")
-  .then(r => r.json())
-  .then(list => {
-    songs = list;
-  });
+function randomSong(){
+  if(!musicOn) return;
+  if(!songs || songs.length === 0) return;
 
-function playRandomSong(){
-  if(!musicOn || songs.length === 0) return;
-
-  if(audio){
-    audio.pause();
-  }
-
-  const song = songs[Math.floor(Math.random() * songs.length)];
-  audio = new Audio(song);
-  audio.volume = 0.5; // 🔊 5%
-  audio.play().catch(()=>{});
-
-  // เพลงจบ → สุ่มใหม่
-  audio.onended = playRandomSong;
+  music.src = songs[Math.floor(Math.random()*songs.length)];
+  music.volume = 0.5;
+  music.play().catch(()=>{});
 }
 
-const music = document.getElementById("music");
+music.onended = () => {
+  if(musicOn) randomSong();
+};
 
 function toggleMusic(){
   musicOn = !musicOn;
 
   if(musicOn){
-    randomSong(); // เปิดแล้วสุ่มเพลงเล่น
+    randomSong();
     document.getElementById("musicBtn").innerText = "🔊 ปิดเพลง";
   }else{
-    music.pause();          // ปิดแล้วหยุด
-    // ถ้าอยากให้เริ่มเพลงใหม่ทุกครั้งที่เปิดค่อยเล่นต่อ ให้ reset ด้วย
+    music.pause();
     music.currentTime = 0;
     document.getElementById("musicBtn").innerText = "🔈 เปิดเพลง";
   }
 }
 
-// บังคับให้เริ่มหลังคลิกครั้งแรก (กัน browser บล็อก)
-window.addEventListener("click", ()=>{
-  if(!audio && songs.length){
-    playRandomSong();
-  }
-},{ once:true });
-  
 const birthdayMonth = 3; // ถ้าจะเปิดระบบวันเกิด ใส่เดือน 0..11
 const birthdayDay = 12;
 
@@ -474,11 +454,6 @@ function randomSong(){
   music.src = songs[Math.floor(Math.random()*songs.length)];
   music.play().catch(()=>{});
 }
-if(songs.length > 0){
-  music.onended = randomSong;
-  randomSong();
-}
-
 /* popup on exact anniversary (year) */
 function checkExactYearAnniv(){
   const now = new Date();
@@ -501,8 +476,8 @@ function fireworks(){
     f.style.left = Math.random()*100 + "vw";
     f.style.top  = Math.random()*80 + "vh";
     f.textContent = "🎆";
-    h.style.animationDuration = (7 + Math.random() * 6) + "s"; // 7-13s
-    h.style.fontSize = (10 + Math.random() * 18) + "px";       // มีแล้วก็ได้ แต่ทำให้ชัดขึ้น
+    f.style.animationDuration = (7 + Math.random() * 6) + "s"; // 7-13s
+    f.style.fontSize = (10 + Math.random() * 18) + "px";       // มีแล้วก็ได้ แต่ทำให้ชัดขึ้น
     document.body.appendChild(f);
     setTimeout(()=>f.remove(), 1800);
     i++;
