@@ -445,27 +445,6 @@ function showOverlay(id){ document.getElementById(id).style.display = "flex"; }
 function closeOverlay(id){ document.getElementById(id).style.display = "none"; }
 function openMemory(){ showOverlay("memoryOverlay"); }
 
-/* simple audio handling (if songs array provided) */
-const music = document.getElementById("music");
-function randomSong(){
-  if(!musicOn) return;
-  if(!songs || songs.length === 0) return;
-
-  music.src = songs[Math.floor(Math.random()*songs.length)];
-  music.play().catch(()=>{});
-}
-/* popup on exact anniversary (year) */
-function checkExactYearAnniv(){
-  const now = new Date();
-  if(now.getMonth() === startDate.getMonth() && now.getDate() === startDate.getDate() &&
-     now.getHours() === startDate.getHours() && Math.abs(now.getMinutes() - startDate.getMinutes()) < 1){
-    // show popup (only when exact moment; adjust tolerance if needed)
-    showOverlay("annivOverlay");
-    fireworks();
-  }
-}
-setInterval(checkExactYearAnniv, 30*1000); // check every 30s
-
 /* fireworks effect (simple) */
 function fireworks(){
   const times = 16;
