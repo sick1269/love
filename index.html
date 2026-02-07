@@ -236,49 +236,45 @@ let songs = [
   "music/Jessie J - Bang Bang ft. Ariana Grande, Nicki Minaj.mp3",
   "music/Unholy.mp3"
 ]; // เพิ่มเพลงถ้ามี
-let musicOn = false; // เริ่มต้นปิดไว้ กัน autoplay โดนบล็อก
-const music = document.getElementById("music");
-music.volume = 0.28; // 25-30% (ปรับเป็น 0.25 หรือ 0.30 ได้)
+let audio = null;
+let musicOn = true;
 
-function pickRandomSong(){
-  return songs[Math.floor(Math.random() * songs.length)];
-}
+// โหลดรายชื่อเพลง
+fetch("music/music.json")
+  .then(r => r.json())
+  .then(list => {
+    songs = list;
+    playRandomSong(); // เล่นทันทีตอนเข้าเว็บ
+  });
 
-function startMusic(){
-  if (!songs.length) return;
+function playRandomSong(){
+  if(!musicOn || songs.length === 0) return;
 
-  // ถ้ายังไม่มีเพลง หรือเพลงเดิมจบ/หยุด ให้สุ่มใหม่
-  if (!music.src || music.ended) {
-    music.src = pickRandomSong();
+  if(audio){
+    audio.pause();
   }
 
-  const p = music.play();
-  if (p && typeof p.catch === "function") p.catch(()=>{});
-}
+  const song = songs[Math.floor(Math.random() * songs.length)];
+  audio = new Audio(song);
+  audio.volume = 0.15; // 🔊 30%
+  audio.play().catch(()=>{});
 
-function stopMusic(){
-  music.pause();
+  // เพลงจบ → สุ่มใหม่
+  audio.onended = playRandomSong;
 }
 
 function toggleMusic(){
   musicOn = !musicOn;
 
-  if (musicOn) {
-    startMusic();
-  } else {
-    stopMusic();
+  if(!musicOn && audio){
+    audio.pause();
+  }else{
+    playRandomSong();
   }
 
   document.getElementById("musicBtn").innerText =
     musicOn ? "🔊 ปิดเพลง" : "🔈 เปิดเพลง";
 }
-
-// เพลงจบ → สุ่มเพลงใหม่ (ถ้ายังเปิดเพลงอยู่)
-music.addEventListener("ended", () => {
-  if (!musicOn) return;
-  music.src = pickRandomSong();
-  startMusic();
-});
 
 // บังคับให้เริ่มหลังคลิกครั้งแรก (กัน browser บล็อก)
 window.addEventListener("click", ()=>{
