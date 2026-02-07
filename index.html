@@ -72,17 +72,22 @@ button{
 }
 .heart{
   position: fixed;
-  left: 0;            /* ไม่จำเป็น แต่ช่วยกันค่าหลุด */
   bottom: -20px;
   opacity: .25;
   pointer-events: none;
   z-index: 5;
 
-  animation: float 9s linear forwards; /* 🔥 เอา infinite ออก */
+  animation: float 9s linear forwards;
+  will-change: transform;
 }
+
 @keyframes float{
-  from { transform: translateY(0); }
-  to   { transform: translateY(-120vh); }
+  0%   { transform: translate3d(0, 0, 0) rotate(-6deg); opacity: 0; }
+  10%  { opacity: .18; }
+  25%  { transform: translate3d(14px, -30vh, 0) rotate(6deg); }
+  50%  { transform: translate3d(-12px, -60vh, 0) rotate(-4deg); }
+  75%  { transform: translate3d(10px, -90vh, 0) rotate(5deg); }
+  100% { transform: translate3d(-6px, -120vh, 0) rotate(-2deg); opacity: 0; }
 }
 
 /* Overlay */
