@@ -70,8 +70,12 @@ button{
  padding:10px 16px;margin:4px;border:none;border-radius:999px;
  background:#ff758c;color:#fff;font-size:1rem;
 }
-.heart{position:absolute;bottom:-20px;opacity:.25;animation:float linear;}
-@keyframes float{to{transform:translateY(-120vh);}}
+.heart{
+  position: fixed;
+  bottom: -20px;
+  opacity: .25;
+  animation: float 9s linear infinite;
+}
 
 /* Overlay */
 .overlay{
