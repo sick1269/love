@@ -256,7 +256,7 @@ function playRandomSong(){
 
   const song = songs[Math.floor(Math.random() * songs.length)];
   audio = new Audio(song);
-  audio.volume = 0.3; // 🔊 30%
+  audio.volume = 0.25; // 🔊 30%
   audio.play().catch(()=>{});
 
   // เพลงจบ → สุ่มใหม่
@@ -499,6 +499,8 @@ function fireworks(){
     f.style.left = Math.random()*100 + "vw";
     f.style.top  = Math.random()*80 + "vh";
     f.textContent = "🎆";
+    h.style.animationDuration = (7 + Math.random() * 6) + "s"; // 7-13s
+    h.style.fontSize = (10 + Math.random() * 18) + "px";       // มีแล้วก็ได้ แต่ทำให้ชัดขึ้น
     document.body.appendChild(f);
     setTimeout(()=>f.remove(), 1800);
     i++;
@@ -517,7 +519,7 @@ setInterval(()=>{
   h.style.opacity = .12;
   h.textContent = "💗";
   document.body.appendChild(h);
-  setTimeout(()=> h.remove(), 9000);
+  setTimeout(()=> h.remove(), 14000);
 }, 900);
 
 /* end script */
