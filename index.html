@@ -256,7 +256,7 @@ function playRandomSong(){
 
   const song = songs[Math.floor(Math.random() * songs.length)];
   audio = new Audio(song);
-  audio.volume = 0.25; // 🔊 30%
+  audio.volume = 0.15; // 🔊 30%
   audio.play().catch(()=>{});
 
   // เพลงจบ → สุ่มใหม่
