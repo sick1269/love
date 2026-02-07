@@ -216,7 +216,7 @@ button{
 
 <!-- overlays -->
 <div id="memoryOverlay" class="overlay"><div class="box"><h3>📦 กล่องความทรงจำ</h3><p>เราเป็นคนคุยกัน<br> วันที่ 6 พฤศจิกา เวลา 19:02<br><br> ผ่านไป 2 วัันเราเริ่มคบกัน<br> วันที่ 8 พฤศจิกา เวลา 11:07<br><br> เราเจอกันครั้งแรก ที่ BTS<br> วันที่ 23 ธันวา เวลา 10:05 (โดยประมาณ ดีใจจนลืมดูเวลา)</p><button onclick="closeOverlay('memoryOverlay')">ปิด</button></div></div>
-<div id="annivOverlay" class="overlay"><div class="box"><h3>🎉 สุขสันต์วันครบรอบนะคะ 🎉</h3><p>ขอบคุณที่อยู่ด้วยกันมาขนาดนี้แล้วยัังไม่เบื่อกันนะคะ ❤️<br> ขอให้มีความสุขแบบนี้ด้วยกันไปตลอดนะคะ รักเธอนะ 😊</p><button onclick="closeOverlay('annivOverlay')">ปิด</button></div></div>
+<div id="annivOverlay" class="overlay"><div class="box"><h3>🎉 สุขสันต์วันครบรอบนะคะ 🎉</h3><p>เราคบกันมา 1 ปี 1 เดือนแล้วนะคะ แมวน้อย <br><p>ขอบคุณที่อยู่ด้วยกันมาขนาดนี้แล้วยัังไม่เบื่อกันนะคะ ❤️<br> ขอให้มีความสุขแบบนี้ด้วยกันไปตลอดนะคะ รักเธอนะ 😊</p><button onclick="closeOverlay('annivOverlay')">ปิด</button></div></div>
 <div id="birthdayOverlay" class="overlay"><div class="box"><h3>🎂 แฮปปี้เบิร์ดเดย์นะคะที่รัก 🎂</h3><p>ขอให้ปีนี้ยิ้มเยอะๆ มีความสุขมากๆ ❤️<br> ขอให้จำไว้ว่า เค้าจะอยู่ตรงนี้เสมอนะคะ</p><button onclick="closeOverlay('birthdayOverlay')">ปิด</button></div></div>
 
 <audio id="music"></audio>
@@ -356,25 +356,44 @@ function partsFromSeconds(totalSec){
   return {mo, d, h, m, s};
 }
 
-/* compute next monthly anniversary target (next date with same day/time-of-month) */
+/* helper: clamp day ให้ไม่ล้นเดือน (เช่น 31 ไปเดือนที่มี 30/28) */
+function clampDay(year, monthIndex, day){
+  const lastDay = new Date(year, monthIndex + 1, 0).getDate(); // วันสุดท้ายของเดือนนั้น
+  return Math.min(day, lastDay);
+}
+
+/* compute next monthly anniversary target (นับเป็นวันครบรอบตั้งแต่ 00:00) */
 function nextMonthlyTarget(fromDate){
   const now = new Date();
-  // start from this month's candidate
-  let target = new Date(now.getFullYear(), now.getMonth(), fromDate.getDate(), fromDate.getHours(), fromDate.getMinutes(), fromDate.getSeconds());
-  if(target <= now) {
-    // move to next month
-    target = new Date(now.getFullYear(), now.getMonth() + 1, fromDate.getDate(), fromDate.getHours(), fromDate.getMinutes(), fromDate.getSeconds());
+
+  // candidate = วันเดียวกับ fromDate แต่เวลาเป็น 00:00:00 ของ "เดือนนี้"
+  const dayThisMonth = clampDay(now.getFullYear(), now.getMonth(), fromDate.getDate());
+  let target = new Date(now.getFullYear(), now.getMonth(), dayThisMonth, 0, 0, 0);
+
+  if (target <= now) {
+    // ไปเดือนหน้า
+    const y = now.getFullYear();
+    const m = now.getMonth() + 1;
+    const dayNextMonth = clampDay(y, m, fromDate.getDate());
+    target = new Date(y, m, dayNextMonth, 0, 0, 0);
   }
+
   return target;
 }
 
-/* compute next yearly anniversary target */
+/* compute next yearly anniversary target (นับเป็นวันครบรอบตั้งแต่ 00:00) */
 function nextYearlyTarget(fromDate){
   const now = new Date();
-  let target = new Date(now.getFullYear(), fromDate.getMonth(), fromDate.getDate(), fromDate.getHours(), fromDate.getMinutes(), fromDate.getSeconds());
-  if(target <= now){
-    target.setFullYear(target.getFullYear() + 1);
+
+  const dayThisYear = clampDay(now.getFullYear(), fromDate.getMonth(), fromDate.getDate());
+  let target = new Date(now.getFullYear(), fromDate.getMonth(), dayThisYear, 0, 0, 0);
+
+  if (target <= now) {
+    const nextYear = now.getFullYear() + 1;
+    const dayNextYear = clampDay(nextYear, fromDate.getMonth(), fromDate.getDate());
+    target = new Date(nextYear, fromDate.getMonth(), dayNextYear, 0, 0, 0);
   }
+
   return target;
 }
 
