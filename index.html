@@ -235,14 +235,13 @@ let songs = [
   "music/Unholy.mp3"
 ]; // เพิ่มเพลงถ้ามี
 let audio = null;
-let musicOn = true;
+let musicOn = false;
 
 // โหลดรายชื่อเพลง
 fetch("music/music.json")
   .then(r => r.json())
   .then(list => {
     songs = list;
-    playRandomSong(); // เล่นทันทีตอนเข้าเว็บ
   });
 
 function playRandomSong(){
@@ -261,17 +260,20 @@ function playRandomSong(){
   audio.onended = playRandomSong;
 }
 
+const music = document.getElementById("music");
+
 function toggleMusic(){
   musicOn = !musicOn;
 
-  if(!musicOn && audio){
-    audio.pause();
+  if(musicOn){
+    randomSong(); // เปิดแล้วสุ่มเพลงเล่น
+    document.getElementById("musicBtn").innerText = "🔊 ปิดเพลง";
   }else{
-    playRandomSong();
+    music.pause();          // ปิดแล้วหยุด
+    // ถ้าอยากให้เริ่มเพลงใหม่ทุกครั้งที่เปิดค่อยเล่นต่อ ให้ reset ด้วย
+    music.currentTime = 0;
+    document.getElementById("musicBtn").innerText = "🔈 เปิดเพลง";
   }
-
-  document.getElementById("musicBtn").innerText =
-    musicOn ? "🔊 ปิดเพลง" : "🔈 เปิดเพลง";
 }
 
 // บังคับให้เริ่มหลังคลิกครั้งแรก (กัน browser บล็อก)
@@ -466,9 +468,11 @@ function openMemory(){ showOverlay("memoryOverlay"); }
 /* simple audio handling (if songs array provided) */
 const music = document.getElementById("music");
 function randomSong(){
+  if(!musicOn) return;
   if(!songs || songs.length === 0) return;
+
   music.src = songs[Math.floor(Math.random()*songs.length)];
-  music.play();
+  music.play().catch(()=>{});
 }
 if(songs.length > 0){
   music.onended = randomSong;
