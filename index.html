@@ -72,9 +72,17 @@ button{
 }
 .heart{
   position: fixed;
+  left: 0;            /* ไม่จำเป็น แต่ช่วยกันค่าหลุด */
   bottom: -20px;
   opacity: .25;
-  animation: float 9s linear infinite;
+  pointer-events: none;
+  z-index: 5;
+
+  animation: float 9s linear forwards; /* 🔥 เอา infinite ออก */
+}
+@keyframes float{
+  from { transform: translateY(0); }
+  to   { transform: translateY(-120vh); }
 }
 
 /* Overlay */
